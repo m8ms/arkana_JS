@@ -1,0 +1,546 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/league.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+    <link rel="stylesheet" href="mine.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <img src='/img/logo.svg' alt='' class='dc-logo'>
+    <div class="slides">
+        <section>
+            <p>Pewna krótka lekcja wyniesiona z testów...</p>
+            <small  style='opacity: .6'>Piotr Martyniak, Olga Bednarczyk</small>
+            <br>
+            <small style='opacity: .4'>DaftUp</small>
+            <aside class="notes" data-markdown>
+                * jeseśmy z daftupa
+                * tworzymy MVC
+                * react (& nextjs, relevant?)
+
+                Olga
+                * parę słów o testowaniu u nas?
+                * ...
+            </aside>
+        </section>
+
+
+        <section>
+            <section>Był sobie taki oto komponent...</section>
+            <section>
+                <div class='steps-and-img'>
+                    <ol>
+                        <li></li>
+                        <li></li>
+                        <li></li>
+                    </ol>
+                    <img width="550px" height="507px" src='/img/komponent.png'/>
+                </div>
+                <aside class="notes" data-markdown>
+                    * przejść przez stany
+                </aside>
+            </section>
+
+            <section>
+                VerifyPhone.js
+<pre class='stretch'><code data-trim data-noescape>
+@connect(store => ({ confirmationToken: userConfirmationTokenSelector(store) })
+export class VerifyPhone extends React.Component {
+  static propTypes = {
+    onPhoneVerified: PropTypes.func.isRequired
+  }
+
+  state = {
+    phoneNumber: null,
+    confirmationLoading: false,
+    confirmationError: false,
+    confirmationSuccess: false,
+    phoneError: false
+  }
+
+  //---- utility methods
+  isPhoneNumberValid = () => {}
+  handleKeyUp = (e) => {}
+  handlePhoneChange = (e) => {}
+  getInputMessage = () => {}
+  showConfirmationError = () => {}
+  showPhoneError = () => {}
+
+  //---- API calls
+  handlePhoneError = async (errRes) => {}
+  sendPhone = async () => {}
+  handleVerifyCodeChange = async (code) => {}
+
+  render () {
+    const { confirmationToken, t } = this.props
+    const { phoneError, confirmationLoading, confirmationError, confirmationSuccess } = this.state
+    const confirmMode = !!confirmationToken
+
+    return (
+      &lt;div className={bemCx('verify-phone', { confirmed: confirmationSuccess })}>
+        &lt;div className='verify-phone__input-section'>
+          &lt;div className='verify-phone__title'>{this.getInputMessage()}&lt;/div>
+
+          &lt;div className='verify-phone__inputs'>
+            //phone input
+            &lt;InputField
+                    className='verify-phone__input'
+                    placeholder='XXX XXX XXX'
+                    onKeyUp={this.handleKeyUp}
+                    onKeyDown={_preventFormSubmit}
+                    onChange={this.handlePhoneChange}
+                    disabled={confirmationSuccess}
+                    confirmed={confirmationSuccess}
+            />
+            //button
+            {!confirmationSuccess &&
+            &lt;Button
+                    className={bemCx('verify-phone__button', { send: !confirmMode })}
+                    label={confirmMode ? t('labels.again') : t('labels.send')}
+                    Icon={confirmMode ? null : () => &lt;span className='i-mail' />}
+                    disabled={!this.isPhoneNumberValid()}
+                    onClick={this.sendPhone}
+            />
+            }
+          &lt;/div>
+
+          //phone error
+          {this.showPhoneError()}
+
+        &lt;/div>
+
+        //confirm section
+        &lt;div className='verify-phone__code-section'>
+          {confirmMode &&
+          &lt;ConfirmCode
+                  text={t('verify_phone.type_verification_code')}
+                  onChange={this.handleVerifyCodeChange}
+                  loading={confirmationLoading}
+          />
+          }
+
+          //confirm error
+          {this.showConfirmationError()}
+        &lt;/div>
+      &lt;/div>
+    )
+  }
+}
+</code></pre>
+
+                <aside class="notes" data-markdown>
+                    * stan komponentu -> etapy weryfikacji
+                    * redux -> props `confirmationToken` -> etap "potwierdź"
+
+                    * wewnętrzne metody
+                    * metody api
+
+                    JSX:
+                    * input zmienia się na "confirmed", jak sukces
+                    * button widoczny, jak tryb "potwierdź"
+                    * zły nr telefonu -> error
+                    * Confirm -> pojawia się po wysłaniu nr. tel
+                    * confirm error -> wiadomo
+
+                    (kod się skrolluje!)
+                </aside>
+            </section>
+            <section>
+                Co tu jest nie tak?
+
+                <aside class="notes" data-markdown>
+                    * ok 140 linii kodu
+                    * chaos:
+                        * część stanu z reduxa, a część jest w state
+                        * dużo funkcjonalności w kupie
+                </aside>
+            </section>
+        </section>
+        <section>
+            <section>Test</section>
+            <section>
+                <h4>Flow</h4>
+                <ol>
+                    <li class='fragment'><p>Init: tylko input z buttonem</p></li>
+                    <li class='fragment'><p>Submit: pokazuje code-confirm (lub błąd)</p></li>
+                    <li class='fragment'><p>Wpisane 4 cyfry -> wysyła potwierdzenie</p>
+                        <p class='fragment'>Nie wysyła gdy:</p>
+                        <ul>
+                            <li class='fragment'>mniej niż 4 cyfry</li>
+                            <li class='fragment'>nie cyfry</li>
+                        </ul>
+                        <p class='fragment'>+ pokazuje błąd</p>
+                    </li>
+                    <li class='fragment'>Pokazuje potwierdzony nr (lub błąd)</li>
+                </ol>
+
+                <aside class="notes" data-markdown>
+                    1. #2 łatwa do przetestowania zmiana stanu, bo props z reduxa
+                    1. #3 4 - cyfry są -> idzie request
+                </aside>
+
+            </section>
+            <section>
+                VerifyPhone.test.js
+<pre class='stretch'><code data-trim data-noescape>
+it('2) Shows code-confirm on successful phone # submit', () => {
+    const component = mount(&lt;VerifyPhone onPhoneVerified={() => null} confirmationToken={'example'} />)
+
+    expect(component.find('.confirm-code').exists()).toBe(true)
+})
+
+it('3) sends verification code when 4 digits are entered', () => {
+
+    const wrapper = shallow(&lt;VerifyPhone onPhoneVerified={() => null} confirmationToken={'example'} />)
+    const component = mount(wrapper.get(0))
+
+    component.instance().handleVerifyCodeChange('2345')
+
+    expect(component.state().confirmationError).toBe(true) // error because API does not exist in test env
+    expect(component.state().confirmationLoading).toBe(false)
+})
+</code></pre>
+            </section>
+            <section class='only-striked-out'>
+                <h4>Flow</h4>
+                <ol>
+                    <li><p>Init: tylko input z buttonem</p></li>
+                    <li><p>Submit: pokazuje code-confirm <del>(lub błąd)</del></p></li>
+                    <li><p>Wpisane 4 cyfry -> wysyła potwierdzenie</p>
+                        <p>Nie wysyła gdy:</p>
+                        <ul>
+                            <li>mniej niż 4 cyfry</li>
+                            <li>nie cyfry</li>
+                        </ul>
+                        <p><del>+ pokazuje błąd</del></p>
+                    </li>
+                    <li><del>Pokazuje potwierdzony nr (lub błąd)</del></li>
+
+
+                    <aside class="notes" data-markdown>
+                        trudno testować zmiany state
+
+                        i co z tym możemy zrobić?
+
+                        wskazówka -> props z reduxa uprościł test case
+                    </aside>
+                </ol>
+
+            </section>
+        </section>
+        <section>
+            <section>
+                Rozdwajamy!
+
+                <aside class="notes" data-markdown>
+                    * separation of concerns = rozdział odpowiedzialności
+                    * komponent - pokazywacz
+                    * komponent - obliczacz (container)
+                </aside>
+            </section>
+            <section>
+                VerifyPhone.js
+<pre class='stretch'><code data-trim data-noescape>
+export class VerifyPhone extends React.Component {
+  static propTypes = {
+    handlePhoneChange: PropTypes.func.isRequired,
+    submitPhone: PropTypes.func.isRequired,
+    onConfirmCodeChange: PropTypes.func.isRequired,
+    step: PropTypes.string.isRequired,
+    phoneError: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
+  }
+
+  //---- utility methods
+  isPhoneNumberValid = () => {}
+  handleKeyUp = (e) => {}
+  preventFormSubmit (e) {}
+  getInputMessage = () => {}
+  showConfirmationError = () => {}
+  showPhoneError = () => {}
+
+  //---- step getters
+  isSuccess () { return this.props.step === 'success' }
+  isInit () { return this.props.step === 'init' }
+  isLoading () { return this.props.step === 'loading' }
+
+  render () {
+    const {
+      t,
+      phoneError,
+      step,
+      handlePhoneChange,
+      submitPhone,
+      onConfirmCodeChange
+    } = this.props
+
+    return (
+      &lt;div className={bemCx('verify-phone', { confirmed: this.isSuccess() })}>
+        &lt;div className='verify-phone__input-section'>
+          &lt;div className='verify-phone__title'>
+            {this.getInputMessage()}
+          &lt;/div>
+          &lt;div className='verify-phone__inputs'>
+            //phone input
+            &lt;InputField
+              className='verify-phone__input'
+              placeholder='XXX XXX XXX'
+              onKeyUp={this.handleKeyUp}
+              onKeyDown={this.preventFormSubmit}
+              onChange={handlePhoneChange}
+              disabled={this.isSuccess()}
+              confirmed={this.isSuccess()}
+            />
+            //button
+            {!this.isSuccess() &&
+            &lt;Button
+              className={bemCx('verify-phone__button', { send: step === 'init' })}
+              label={this.isInit() ? t('labels.send') : t('labels.again')}
+              Icon={this.isInit() ? () => &lt;span className='i-mail' /> : null}
+              disabled={!this.isPhoneNumberValid()}
+              onClick={submitPhone}
+            />
+            }
+          &lt;/div>
+          //phone error
+          {this.showPhoneError()}
+        &lt;/div>
+
+        //confirm section
+        &lt;div className='verify-phone__code-section'>
+          {!this.isInit() && !this.isSuccess() &&
+          &lt;ConfirmCode
+            text={t('verify_phone.type_verification_code')}
+            onChange={onConfirmCodeChange}
+            loading={this.isLoading()}
+          />
+          }
+          //confirm error
+          {this.showConfirmationError()}
+        &lt;/div>
+      &lt;/div>
+    )
+  }
+}
+</code></pre>
+                <aside class="notes" data-markdown>
+                    * fully controlled component
+                    * tylko logika wyświetlania
+                    * krok procesu z propsów
+                </aside>
+            </section>
+
+
+            <section>
+                VerifyPhoneContainer.js
+<pre class='stretch'><code data-trim data-noescape>
+@connect(store => ({ confirmationToken: userConfirmationTokenSelector(store) })
+export class VerifyPhoneContainer extends React.Component {
+  static propTypes = {
+    onPhoneVerified: PropTypes.func.isRequired
+  }
+
+  state = {
+    phoneNumber: null,
+    step: 'confirm',
+    phoneError: false
+  }
+
+  handlePhoneChange = (e) => {}
+  handlePhoneError = async (errRes) => {}
+  sendPhone = async () => {}
+  handleVerifyCodeChange = async (code) => {}
+
+  render () {
+    const { confirmationToken } = this.props
+    const {
+      phoneError
+    } = this.state
+
+    let step = confirmationToken ? this.state.step : 'init'
+    if (this.state.step === 'success') {
+      step = 'success'
+    }
+
+    return (
+      &lt;VerifyPhone
+        handlePhoneChange={this.handlePhoneChange}
+        submitPhone={this.sendPhone}
+        onConfirmCodeChange={this.handleVerifyCodeChange}
+        step={step}
+        phoneError={phoneError}
+      />
+    )
+  }
+}
+</code></pre>
+                <aside class="notes" data-markdown>
+                    * tylko logika biznesowa
+                    * pamięta i ogarnia obecny krok
+                </aside>
+            </section>
+        </section>
+
+
+        <section>
+            <section>
+                Test
+            </section>
+            <section>
+                VerifyPhone.test.js
+<pre class='stretch'><code data-trim data-noescape>
+it('1) Initializes with phone box and button only', () => {
+
+    const c = mount(&lt;VerifyPhone {...props} step='init' />)
+    expect(c.find('.confirm-code').exists()).toBe(false)
+    expect(c.find('.input-field').exists()).toBe(true)
+    expect(c.find('.button').exists()).toBe(true)
+})
+
+it('2) Shows code-confirm on successful phone # submit', () => {
+
+    const c = mount(&lt;VerifyPhone {...props} step='confirm' />)
+    expect(c.find('.confirm-code').exists()).toBe(true)
+})
+
+it('2a) Shows message on phone # failure', () => {
+
+    const phoneErrorMsg = 'error message'
+    const c = mount(&lt;VerifyPhone {...props} step='init' phoneError={phoneErrorMsg} />)
+    expect(c.find('.verify-phone__error').exists()).toBe(true)
+    expect(c.find('.verify-phone__error').text()).toContain(phoneErrorMsg)
+    })
+
+it('3) Blocks input and hides confirm fields on success', () => {
+
+    const c = mount(&lt;VerifyPhone {...props} step='success' />)
+    expect(c.find('.confirm-code').exists()).toBe(false)
+    expect(c.find('.button').exists()).toBe(false)
+    expect(c.find('.input-field--confirmed').exists()).toBe(true)
+    expect(c.find('.input-field--confirmed > input').props().disabled).toBe(true)
+})
+
+it('3a) Shows confirmation error', () => {
+
+    const component = mount(&lt;VerifyPhone {...props} step='failed' />)
+    expect(component.find('.confirm-code').exists()).toBe(true)
+    expect(component.find('.verify-phone__error').exists()).toBe(true)
+})
+</code></pre>
+                <aside class="notes" data-markdown>
+                    * wszystkie kroki flow
+                    * nie ma grzebania w state
+                </aside>
+            </section>
+            <section>
+                VerifyPhone.test.js - snapshoty
+<pre class='stretch'><code data-trim data-noescape>
+it('Snapshot: init', () => {
+    const c = renderer.create(&lt;VerifyPhone <mark>step='init'</mark> {...props} />)
+    const tree = c.toJSON()
+    expect(tree).toMatchSnapshot()
+})
+
+it('Snapshot: confirm', () => {
+    const c = renderer.create(&lt;VerifyPhone <mark>step='confirm'</mark> {...props} />)
+    const tree = c.toJSON()
+    expect(tree).toMatchSnapshot()
+})
+
+it('Snapshot: success', () => {
+    const c = renderer.create(&lt;VerifyPhone <mark>step='success'</mark> {...props} />)
+    const tree = c.toJSON()
+    expect(tree).toMatchSnapshot()
+})
+
+it('Snapshot: failed', () => {
+    const c = renderer.create(&lt;VerifyPhone <mark>step='failed'</mark> {...props} />)
+    const tree = c.toJSON()
+    expect(tree).toMatchSnapshot()
+})
+</code></pre>
+                <aside class="notes" data-markdown>
+                    * można ew. zrezygnować z testów na rzecz snapshotów
+                </aside>
+            </section>
+        </section>
+    <section>
+        <section>
+            <p>Separation of Concerns</p>
+            <aside class="notes" data-markdown>
+                 rozdzielenie odpowiedzialności
+            </aside>
+        </section>
+        <section>
+            <p class='fragment'>React:</p>
+            <ul>
+                <li class='fragment'>Higher Order Components</li>
+                <li class='fragment'>Redux / Flux</li>
+                <li class='fragment'>JSX</li>
+                <li class='fragment'>Container Components</li>
+            </ul>
+            <aside class="notes" data-markdown>
+
+            </aside>
+        </section>
+    </section>
+        <section>
+            <!--<small>Lektura obowiązkowa:</small>-->
+            <!--<p>https://krasimir.gitbooks.io/react-in-patterns/</p>-->
+            <div class='fragment'>Wait?</div>
+            <div class='fragment'>Test, który pomógł w napisaniu lepszego testu?</div>
+            <p>Inne korzyści:</p>
+            <ul>
+                <li class='fragment'>łatwiejsza kooperacja - mniej konfliktów</li>
+                <li class='fragment'>czytelność kodu</li>
+                <li class='fragment'>łatwiej użyć komponentu gdzie indziej</li>
+                <li class='fragment'>łatwiej myśleć o pojedynczych problemach</li>
+            </ul>
+
+            <aside class="notes" data-markdown>
+                Olga: po całości?
+                Piotrek: ostatni punkt przykład step (jak będzie czas)
+            </aside>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        dependencies: [
+            { src: 'plugin/markdown/marked.js' },
+            { src: 'plugin/markdown/markdown.js' },
+            { src: 'plugin/notes/notes.js', async: true },
+            {
+                src: 'plugin/highlight/highlight.js', async: false, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            }
+        ]
+    });
+</script>
+</body>
+</html>

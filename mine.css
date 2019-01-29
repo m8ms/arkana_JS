@@ -1,0 +1,34 @@
+.steps-and-img {
+    display: flex;
+    justify-content: center
+}
+
+.steps-and-img li{
+    margin: 20px 10px 117px 0
+}
+
+.reveal pre {
+    margin: 0 auto;
+    font-size: .3em;
+}
+
+/*.reveal pre code {*/
+    /*height: 45vh;*/
+    /*max-height: none;*/
+/*}*/
+
+.reveal .only-striked-out {
+    color: rgba(255,255,255,.3)
+}
+
+.reveal .only-striked-out del {
+    color: white
+}
+
+.dc-logo {
+    position: absolute;
+    opacity: .4;
+    bottom: 20px;
+    left: 20px;
+    width: 100px;
+}
