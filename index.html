@@ -37,8 +37,8 @@
                 * react (& nextjs, relevant?)
 
                 Olga
-                * parę słów o testowaniu u nas?
-                * ...
+                * generator komponentów, który 'wymusza' testowanie
+                * Jest i Enzyme
             </aside>
         </section>
 
@@ -55,6 +55,7 @@
                     <img width="550px" height="507px" src='/img/komponent.png'/>
                 </div>
                 <aside class="notes" data-markdown>
+                    Olga
                     * przejść przez stany
                 </aside>
             </section>
@@ -147,6 +148,7 @@ export class VerifyPhone extends React.Component {
 </code></pre>
 
                 <aside class="notes" data-markdown>
+                    Olga
                     * stan komponentu -> etapy weryfikacji
                     * redux -> props `confirmationToken` -> etap "potwierdź"
 
@@ -167,6 +169,9 @@ export class VerifyPhone extends React.Component {
                 Co tu jest nie tak?
 
                 <aside class="notes" data-markdown>
+                    Olga - pytanie
+
+                    Piotrek - odpowiedź:
                     * ok 140 linii kodu
                     * chaos:
                         * część stanu z reduxa, a część jest w state
@@ -508,14 +513,14 @@ it('Snapshot: failed', () => {
             <div class='fragment'>Test, który pomógł w napisaniu lepszego testu?</div>
             <p>Inne korzyści:</p>
             <ul>
-                <li class='fragment'>łatwiejsza kooperacja - mniej konfliktów</li>
                 <li class='fragment'>czytelność kodu</li>
                 <li class='fragment'>łatwiej użyć komponentu gdzie indziej</li>
+                <li class='fragment'>łatwiejsza kooperacja - mniej konfliktów</li>
                 <li class='fragment'>łatwiej myśleć o pojedynczych problemach</li>
             </ul>
 
             <aside class="notes" data-markdown>
-                Olga: po całości?
+                Olga: 3 pierwsze punkty
                 Piotrek: ostatni punkt przykład step (jak będzie czas)
             </aside>
         </section>
