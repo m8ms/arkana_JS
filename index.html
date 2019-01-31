@@ -151,7 +151,6 @@ export class VerifyPhone extends React.Component {
                     Olga
                     * stan komponentu -> etapy weryfikacji
                     * redux -> props `confirmationToken` -> etap "potwierdź"
-
                     * wewnętrzne metody
                     * metody api
 
@@ -197,11 +196,6 @@ export class VerifyPhone extends React.Component {
                     <li class='fragment'>Pokazuje potwierdzony nr (lub błąd)</li>
                 </ol>
 
-                <aside class="notes" data-markdown>
-                    1. #2 łatwa do przetestowania zmiana stanu, bo props z reduxa
-                    1. #3 4 - cyfry są -> idzie request
-                </aside>
-
             </section>
             <section>
                 VerifyPhone.test.js
@@ -223,6 +217,11 @@ it('3) sends verification code when 4 digits are entered', () => {
     expect(component.state().confirmationLoading).toBe(false)
 })
 </code></pre>
+
+        <aside class="notes" data-markdown>
+            1. #2 łatwa do przetestowania zmiana stanu, bo props z reduxa
+            1. #3 4 - cyfry są -> idzie request
+        </aside>
             </section>
             <section class='only-striked-out'>
                 <h4>Flow</h4>
@@ -509,9 +508,9 @@ it('Snapshot: failed', () => {
         <section>
             <!--<small>Lektura obowiązkowa:</small>-->
             <!--<p>https://krasimir.gitbooks.io/react-in-patterns/</p>-->
-            <div class='fragment'>Wait?</div>
+            <div>Wait?</div>
             <div class='fragment'>Test, który pomógł w napisaniu lepszego testu?</div>
-            <p>Inne korzyści:</p>
+            <p class='fragment'>Inne korzyści:</p>
             <ul>
                 <li class='fragment'>czytelność kodu</li>
                 <li class='fragment'>łatwiej użyć komponentu gdzie indziej</li>
