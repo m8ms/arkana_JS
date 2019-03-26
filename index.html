@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>reveal.js</title>
+    <title>DaftAcademy - Stylowanie Bardziej</title>
 
     <link rel="stylesheet" href="css/reveal.css">
-    <link rel="stylesheet" href="css/theme/league.css">
+    <link rel="stylesheet" href="css/theme/black.css">
 
     <!-- Theme used for syntax highlighting of code -->
     <link rel="stylesheet" href="lib/css/zenburn.css">
@@ -24,501 +24,988 @@
 </head>
 <body>
 <div class="reveal">
+    <header class='academy-header'>
+        <img src='img/fe-lu.svg' width='20%' />
+        <img src='img/main-logo-white.svg' width='20%' />
+    </header>
+
     <img src='img/logo.svg' alt='' class='dc-logo'>
     <div class="slides">
         <section>
-            <p>Pewna krótka lekcja wyniesiona z testów...</p>
-            <small  style='opacity: .6'>Piotr Martyniak, Olga Bednarczyk</small>
+            <h2>Stylowanie bardziej</h2>
+            <small style='opacity: .6'>Piotr Martyniak</small>
             <br>
-            <small style='opacity: .4'>DaftUp</small>
+            <small style='opacity: .4'>DaftCode</small>
             <aside class="notes" data-markdown>
-                * jeseśmy z daftupa
-                * tworzymy MVC
-                * react (& nextjs, relevant?)
+                agenda:
 
-                Olga
-                * generator komponentów, który 'wymusza' testowanie
-                * Jest i Enzyme
             </aside>
         </section>
 
-
         <section>
-            <section>Był sobie taki oto komponent...</section>
             <section>
-                <div class='steps-and-img'>
-                    <ol>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                    </ol>
-                    <img width="550px" height="507px" src='img/komponent.png'/>
+                <h3>Rozszerzenia CSS</h3>
+
+                <div class='h-container'>
+                    <img src='img/less_logo.png' alt='' class='plain-img fragment shrink fade-out'
+                         data-fragment-index='1'>
+                    <img src='img/sass.svg' alt='' class='plain-img fragment grow' data-fragment-index='1'>
+                    <img src='img/stylus-logo.svg' alt='' class='plain-img fragment shrink fade-out'
+                         data-fragment-index='1'>
                 </div>
                 <aside class="notes" data-markdown>
-                    Olga
-                    * przejść przez stany
+                    agenda:
+                    * SASS
+                    * konfiguracja webpacka
+                    * dobre i złe praktyki
+                    * frameworki i metodyki
+                    * CSS-IN-JS
                 </aside>
             </section>
+            <section data-markdown data-separator-notes="^Note:">
+                #### zmienne
 
-            <section>
-                VerifyPhone.js
-<pre class='stretch'><code data-trim data-noescape>
-@connect(store => ({ confirmationToken: userConfirmationTokenSelector(store) })
-export class VerifyPhone extends React.Component {
-  static propTypes = {
-    onPhoneVerified: PropTypes.func.isRequired
-  }
+                ```SCSS
+$font-stack:    Helvetica, sans-serif;
+$primary-color: #333;
 
-  state = {
-    phoneNumber: null,
-    confirmationLoading: false,
-    confirmationError: false,
-    confirmationSuccess: false,
-    phoneError: false
-  }
-
-  //---- utility methods
-  isPhoneNumberValid = () => {}
-  handleKeyUp = (e) => {}
-  handlePhoneChange = (e) => {}
-  getInputMessage = () => {}
-  showConfirmationError = () => {}
-  showPhoneError = () => {}
-
-  //---- API calls
-  handlePhoneError = async (errRes) => {}
-  sendPhone = async () => {}
-  handleVerifyCodeChange = async (code) => {}
-
-  render () {
-    const { confirmationToken, t } = this.props
-    const { phoneError, confirmationLoading, confirmationError, confirmationSuccess } = this.state
-    const confirmMode = !!confirmationToken
-
-    return (
-      &lt;div className={bemCx('verify-phone', { confirmed: confirmationSuccess })}>
-        &lt;div className='verify-phone__input-section'>
-          &lt;div className='verify-phone__title'>{this.getInputMessage()}&lt;/div>
-
-          &lt;div className='verify-phone__inputs'>
-            //phone input
-            &lt;InputField
-                    className='verify-phone__input'
-                    placeholder='XXX XXX XXX'
-                    onKeyUp={this.handleKeyUp}
-                    onKeyDown={_preventFormSubmit}
-                    onChange={this.handlePhoneChange}
-                    disabled={confirmationSuccess}
-                    confirmed={confirmationSuccess}
-            />
-            //button
-            {!confirmationSuccess &&
-            &lt;Button
-                    className={bemCx('verify-phone__button', { send: !confirmMode })}
-                    label={confirmMode ? t('labels.again') : t('labels.send')}
-                    Icon={confirmMode ? null : () => &lt;span className='i-mail' />}
-                    disabled={!this.isPhoneNumberValid()}
-                    onClick={this.sendPhone}
-            />
-            }
-          &lt;/div>
-
-          //phone error
-          {this.showPhoneError()}
-
-        &lt;/div>
-
-        //confirm section
-        &lt;div className='verify-phone__code-section'>
-          {confirmMode &&
-          &lt;ConfirmCode
-                  text={t('verify_phone.type_verification_code')}
-                  onChange={this.handleVerifyCodeChange}
-                  loading={confirmationLoading}
-          />
-          }
-
-          //confirm error
-          {this.showConfirmationError()}
-        &lt;/div>
-      &lt;/div>
-    )
-  }
+body {
+    font: 100% $font-stack;
+    color: $primary-color;
 }
-</code></pre>
-
-                <aside class="notes" data-markdown>
-                    Olga
-                    * stan komponentu -> etapy weryfikacji
-                    * redux -> props `confirmationToken` -> etap "potwierdź"
-                    * wewnętrzne metody
-                    * metody api
-                    * jsx: input zmienia się na "confirmed", jak sukces
-                    * button widoczny, jak tryb "potwierdź"
-                    * zły nr telefonu -> error
-                    * Confirm -> pojawia się po wysłaniu nr. tel
-                    * confirm error -> wiadomo
-                </aside>
+                ```
             </section>
-            <section>
-                Co tu jest nie tak?
+            <section data-markdown>
+                #### zagnieżdżanie (nesting)
+```SCSS
+nav {
+    background: purple;
 
-                <aside class="notes" data-markdown>
-                    Olga - pytanie
-
-                    Piotrek - odpowiedź:
-                    * ok 140 linii kodu
-                    * chaos:
-                        * część stanu z reduxa, a część jest w state
-                        * dużo funkcjonalności w kupie
-                </aside>
-            </section>
-        </section>
-        <section>
-            <section>Test</section>
-            <section>
-                <h4>Flow</h4>
-                <ol>
-                    <li class='fragment'><p>Init: tylko input z buttonem</p></li>
-                    <li class='fragment'><p>Submit: pokazuje code-confirm (lub błąd)</p></li>
-                    <li class='fragment'><p>Wpisane 4 cyfry -> wysyła potwierdzenie</p>
-                        <p class='fragment'>Nie wysyła gdy:</p>
-                        <ul>
-                            <li class='fragment'>mniej niż 4 cyfry</li>
-                            <li class='fragment'>nie cyfry</li>
-                        </ul>
-                        <p class='fragment'>+ pokazuje błąd</p>
-                    </li>
-                    <li class='fragment'>Pokazuje potwierdzony nr (lub błąd)</li>
-                </ol>
-
-            </section>
-            <section>
-                VerifyPhone.test.js
-<pre class='stretch'><code data-trim data-noescape>
-it('2) Shows code-confirm on successful phone # submit', () => {
-    const component = mount(&lt;VerifyPhone onPhoneVerified={() => null} confirmationToken={'example'} />)
-
-    expect(component.find('.confirm-code').exists()).toBe(true)
-})
-
-it('3) sends verification code when 4 digits are entered', () => {
-
-    const wrapper = shallow(&lt;VerifyPhone onPhoneVerified={() => null} confirmationToken={'example'} />)
-    const component = mount(wrapper.get(0))
-
-    component.instance().handleVerifyCodeChange('2345')
-
-    expect(component.state().confirmationError).toBe(true) // error because API does not exist in test env
-    expect(component.state().confirmationLoading).toBe(false)
-})
-</code></pre>
-
-        <aside class="notes" data-markdown>
-            1. #2 łatwa do przetestowania zmiana stanu, bo props z reduxa
-            1. #3 4 - cyfry są -> idzie request
-        </aside>
-            </section>
-            <section class='only-striked-out'>
-                <h4>Flow</h4>
-                <ol>
-                    <li><p>Init: tylko input z buttonem</p></li>
-                    <li><p>Submit: pokazuje code-confirm <del>(lub błąd)</del></p></li>
-                    <li><p>Wpisane 4 cyfry -> wysyła potwierdzenie</p>
-                        <p>Nie wysyła gdy:</p>
-                        <ul>
-                            <li>mniej niż 4 cyfry</li>
-                            <li>nie cyfry</li>
-                        </ul>
-                        <p><del>+ pokazuje błąd</del></p>
-                    </li>
-                    <li><del>Pokazuje potwierdzony nr (lub błąd)</del></li>
-
-
-                    <aside class="notes" data-markdown>
-                        trudno testować zmiany state
-
-                        i co z tym możemy zrobić?
-
-                        wskazówka -> props z reduxa uprościł test case
-                    </aside>
-                </ol>
-
-            </section>
-        </section>
-        <section>
-            <section>
-                Rozdwajamy!
-
-                <aside class="notes" data-markdown>
-                    * separation of concerns = rozdział odpowiedzialności
-                    * komponent - pokazywacz
-                    * komponent - obliczacz (container)
-                </aside>
-            </section>
-            <section>
-                VerifyPhone.js
-<pre class='stretch'><code data-trim data-noescape>
-export class VerifyPhone extends React.Component {
-  static propTypes = {
-    handlePhoneChange: PropTypes.func.isRequired,
-    submitPhone: PropTypes.func.isRequired,
-    onConfirmCodeChange: PropTypes.func.isRequired,
-    step: PropTypes.string.isRequired,
-    phoneError: PropTypes.oneOfType([PropTypes.string, PropTypes.bool])
-  }
-
-  //---- utility methods
-  isPhoneNumberValid = () => {}
-  handleKeyUp = (e) => {}
-  preventFormSubmit (e) {}
-  getInputMessage = () => {}
-  showConfirmationError = () => {}
-  showPhoneError = () => {}
-
-  //---- step getters
-  isSuccess () { return this.props.step === 'success' }
-  isInit () { return this.props.step === 'init' }
-  isLoading () { return this.props.step === 'loading' }
-
-  render () {
-    const {
-      t,
-      phoneError,
-      step,
-      handlePhoneChange,
-      submitPhone,
-      onConfirmCodeChange
-    } = this.props
-
-    return (
-      &lt;div className={bemCx('verify-phone', { confirmed: this.isSuccess() })}>
-        &lt;div className='verify-phone__input-section'>
-          &lt;div className='verify-phone__title'>
-            {this.getInputMessage()}
-          &lt;/div>
-          &lt;div className='verify-phone__inputs'>
-            //phone input
-            &lt;InputField
-              className='verify-phone__input'
-              placeholder='XXX XXX XXX'
-              onKeyUp={this.handleKeyUp}
-              onKeyDown={this.preventFormSubmit}
-              onChange={handlePhoneChange}
-              disabled={this.isSuccess()}
-              confirmed={this.isSuccess()}
-            />
-            //button
-            {!this.isSuccess() &&
-            &lt;Button
-              className={bemCx('verify-phone__button', { send: step === 'init' })}
-              label={this.isInit() ? t('labels.send') : t('labels.again')}
-              Icon={this.isInit() ? () => &lt;span className='i-mail' /> : null}
-              disabled={!this.isPhoneNumberValid()}
-              onClick={submitPhone}
-            />
-            }
-          &lt;/div>
-          //phone error
-          {this.showPhoneError()}
-        &lt;/div>
-
-        //confirm section
-        &lt;div className='verify-phone__code-section'>
-          {!this.isInit() && !this.isSuccess() &&
-          &lt;ConfirmCode
-            text={t('verify_phone.type_verification_code')}
-            onChange={onConfirmCodeChange}
-            loading={this.isLoading()}
-          />
-          }
-          //confirm error
-          {this.showConfirmationError()}
-        &lt;/div>
-      &lt;/div>
-    )
-  }
-}
-</code></pre>
-                <aside class="notes" data-markdown>
-                    * fully controlled component
-                    * tylko logika wyświetlania
-                    * krok procesu z propsów
-                </aside>
-            </section>
-
-
-            <section>
-                VerifyPhoneContainer.js
-<pre class='stretch'><code data-trim data-noescape>
-@connect(store => ({ confirmationToken: userConfirmationTokenSelector(store) })
-export class VerifyPhoneContainer extends React.Component {
-  static propTypes = {
-    onPhoneVerified: PropTypes.func.isRequired
-  }
-
-  state = {
-    phoneNumber: null,
-    step: 'confirm',
-    phoneError: false
-  }
-
-  handlePhoneChange = (e) => {}
-  handlePhoneError = async (errRes) => {}
-  sendPhone = async () => {}
-  handleVerifyCodeChange = async (code) => {}
-
-  render () {
-    const { confirmationToken } = this.props
-    const {
-      phoneError
-    } = this.state
-
-    let step = confirmationToken ? this.state.step : 'init'
-    if (this.state.step === 'success') {
-      step = 'success'
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
     }
 
-    return (
-      &lt;VerifyPhone
-        handlePhoneChange={this.handlePhoneChange}
-        submitPhone={this.sendPhone}
-        onConfirmCodeChange={this.handleVerifyCodeChange}
-        step={step}
-        phoneError={phoneError}
-      />
-    )
+    li { display: inline-block; }
+}
+
+//zbuduje się do:
+
+nav { background: purple; }
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+nav li { display: inline-block; }
+
+```
+            </section>
+            <section data-markdown>
+                #### parent selector
+```SCSS
+#main {
+    color: black;
+
+    a {
+        font-weight: bold;
+
+        &:hover {
+            color: red;
+        }
+    }
+}
+```
+a w efekcie:
+```CSS
+#main { color: black; }
+
+#main a { font-weight: bold; }
+
+#main a:hover { color: red; }
+
+```
+            </section>
+            <section data-markdown>
+                #### importy
+`_reset.scss`
+```SCSS
+html, body, ul, ol {
+    margin:  0;
+    padding: 0;
+}
+```
+
+`base.scss`
+```SCSS
+@import 'reset';
+
+body {
+    font: 100% Helvetica, sans-serif;
+    background-color: #efefef;
+}
+```
+
+            </section>
+            <section data-markdown class='side-by-side'>
+                #### mixiny
+
+                ```SCSS
+@mixin gridTile($w: 200px, $h: 400px) {
+    box-shadow: 5px 10px #888888;
+    background: white;
+    width: $w;
+    height: $h;
+}
+
+.box {
+    @include gridTile(300px, 300px);
+}
+                ```
+
+                ```SCSS
+@mixin apply-to-ie6-only {
+  * html {
+    @content;
+  }
+}
+@include apply-to-ie6-only {
+  #logo {
+    background-image: url(/logo.gif);
+  }
+}
+
+// wynik:
+* html #logo {
+  background-image: url(/logo.gif);
+}
+                ```
+            </section>
+            <section data-markdown class="side-by-side">
+                #### @extend - rozszerzanie selektorów
+
+```SCSS
+// placeholder selector: %
+%message-shared {
+    border: 1px solid #ccc;
+    padding: 10px;
+    color: #333;
+}
+
+.message {
+    @extend %message-shared;
+}
+
+.success {
+    @extend %message-shared;
+    border-color: green;
+}
+
+.error {
+    @extend %message-shared;
+    border-color: red;
+}
+
+.warning {
+    @extend %message-shared;
+    border-color: yellow;
+}
+```
+
+```CSS
+/* wynik */
+
+.message, .success, .error, .warning {
+    border: 1px solid #ccc;
+    padding: 10px;
+    color: #333;
+}
+
+.success {
+    border-color: green;
+}
+
+.error {
+    border-color: red;
+}
+
+.warning {
+    border-color: yellow;
+}
+```
+            </section>
+            <section data-markdown class='side-by-side'>
+                #### @extend
+
+```SCSS
+// zwykła klasa
+.icon {
+    font-family: icofont;
+}
+
+.success-icon {
+    @extend .icon;
+    color: green;
+}
+
+.error-icon {
+    @extend .icon;
+    color: red;
+}
+
+.warning-icon {
+    @extend .icon;
+    color: yellow;
+}
+
+.somewhere-else {
+    .icon {
+        font-size: 20px;
+    }
+}
+```
+
+```CSS
+/* skompiluje się pięknie do: */
+
+.icon,
+.message-icon,
+.success-icon,
+.error-icon,
+.warning -icon {
+    font-family: icofont;
+}
+
+/* ale zrobi nam też taki ambaras */
+
+.somewhere-else .icon,
+.somewhere-else .message-icon,
+.somewhere-else .success-icon,
+.somewhere-else .error-icon,
+.somewhere-else .warning -icon {
+    font-family: icofont;
+}
+
+```
+            </section>
+            <section data-markdown>
+                #### funkcje
+```SCSS
+$grid-width: 40px;
+$gutter-width: 10px;
+
+@function grid-width($n) {
+  @return $n * $grid-width + ($n - 1) * $gutter-width;
+}
+
+#sidebar { width: grid-width(5); }
+                ```
+becomes:
+                ```CSS
+#sidebar {
+  width: 240px;
+}
+```
+            </section>
+            <section data-markdown class='side-by-side'>
+                #### składnie
+                SCSS vs. SASS
+
+                ```SCSS
+nav {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li { display: inline-block; }
+
+  a {
+    display: block;
+    padding: 6px 12px;
+    text-decoration: none;
+  }
+}
+
+@mixin transform($property) {
+  -webkit-transform: $property;
+  -ms-transform: $property;
+  transform: $property;
+}
+
+.box { @include transform(rotate(30deg)); }
+```
+                ```yaml
+nav
+  ul
+    margin: 0
+    padding: 0
+    list-style: none
+
+  li
+    display: inline-block
+
+  a
+    display: block
+    padding: 6px 12px
+    text-decoration: none
+
+
+
+=transform($property)
+  -webkit-transform: $property
+  -ms-transform: $property
+  transform: $property
+
+.box
+  +transform(rotate(30deg))
+                ```
+            </section>
+
+        </section>
+
+<section>
+
+    <section>
+        <h3>sass + webpack</h3>
+        <pre class='fragment fade-right'>
+<code data-trim data-noescape>
+    > npm i -s sass-loader <span class='fragment fade-in'>css-loader </span><span class='fragment fade-in'>style-loader</span> <span class='fragment fade-in'>mini-css-extract-plugin</span> <span class='fragment fade-in'>postcss-loader</span> <span class='fragment fade-in'>postcss-preset-env</span>
+</code></pre>
+        <br/>
+
+    </section>
+    <section>
+        <p><code>webpack.config.js</code></p>
+        <pre>
+<code data-trim data-noescape>
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+module.exports = {
+	//...
+    module: {
+        rules: [{
+            test: /\.s(a|c)ss$/,
+            use: [
+                isProduction
+                ? MiniCssExtractPlugin.loader
+                : { loader: 'style-loader', options: { sourceMap: true } },
+                { loader: 'css-loader', options: { sourceMap: isProduction } },
+                { loader: 'postcss-loader', options: { sourceMap: isProduction } },
+                { loader: 'sass-loader', options: { sourceMap: isProduction } }
+            ]
+        }]
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output; optional
+            filename: "[name].css",
+            chunkFilename: "[id].css"
+        })
+    ]
+};
+</code></pre>
+    </section>
+    <section>
+        <p><code>postcss.config.js</code></p>
+        <pre>
+<code data-trim data-noescape>
+module.exports = {
+  plugins: {
+    'postcss-preset-env': {},
   }
 }
 </code></pre>
-                <aside class="notes" data-markdown>
-                    * tylko logika biznesowa
-                    * pamięta i ogarnia obecny krok
-                </aside>
-            </section>
-        </section>
-
-
-        <section>
-            <section>
-                Test
-            </section>
-            <section>
-                VerifyPhone.test.js
-<pre class='stretch'><code data-trim data-noescape>
-it('1) Initializes with phone box and button only', () => {
-
-    const c = mount(&lt;VerifyPhone {...props} step='init' />)
-    expect(c.find('.confirm-code').exists()).toBe(false)
-    expect(c.find('.input-field').exists()).toBe(true)
-    expect(c.find('.button').exists()).toBe(true)
-})
-
-it('2) Shows code-confirm on successful phone # submit', () => {
-
-    const c = mount(&lt;VerifyPhone {...props} step='confirm' />)
-    expect(c.find('.confirm-code').exists()).toBe(true)
-})
-
-it('2a) Shows message on phone # failure', () => {
-
-    const phoneErrorMsg = 'error message'
-    const c = mount(&lt;VerifyPhone {...props} step='init' phoneError={phoneErrorMsg} />)
-    expect(c.find('.verify-phone__error').exists()).toBe(true)
-    expect(c.find('.verify-phone__error').text()).toContain(phoneErrorMsg)
-    })
-
-it('3) Blocks input and hides confirm fields on success', () => {
-
-    const c = mount(&lt;VerifyPhone {...props} step='success' />)
-    expect(c.find('.confirm-code').exists()).toBe(false)
-    expect(c.find('.button').exists()).toBe(false)
-    expect(c.find('.input-field--confirmed').exists()).toBe(true)
-    expect(c.find('.input-field--confirmed > input').props().disabled).toBe(true)
-})
-
-it('3a) Shows confirmation error', () => {
-
-    const component = mount(&lt;VerifyPhone {...props} step='failed' />)
-    expect(component.find('.confirm-code').exists()).toBe(true)
-    expect(component.find('.verify-phone__error').exists()).toBe(true)
-})
-</code></pre>
-                <aside class="notes" data-markdown>
-                    * wszystkie kroki flow
-                    * nie ma grzebania w state
-                </aside>
-            </section>
-            <section>
-                VerifyPhone.test.js - snapshoty
-<pre class='stretch'><code data-trim data-noescape>
-it('Snapshot: init', () => {
-    const c = renderer.create(&lt;VerifyPhone <mark>step='init'</mark> {...props} />)
-    const tree = c.toJSON()
-    expect(tree).toMatchSnapshot()
-})
-
-it('Snapshot: confirm', () => {
-    const c = renderer.create(&lt;VerifyPhone <mark>step='confirm'</mark> {...props} />)
-    const tree = c.toJSON()
-    expect(tree).toMatchSnapshot()
-})
-
-it('Snapshot: success', () => {
-    const c = renderer.create(&lt;VerifyPhone <mark>step='success'</mark> {...props} />)
-    const tree = c.toJSON()
-    expect(tree).toMatchSnapshot()
-})
-
-it('Snapshot: failed', () => {
-    const c = renderer.create(&lt;VerifyPhone <mark>step='failed'</mark> {...props} />)
-    const tree = c.toJSON()
-    expect(tree).toMatchSnapshot()
-})
-</code></pre>
-                <aside class="notes" data-markdown>
-                    * można ew. zrezygnować z testów na rzecz snapshotów
-                </aside>
-            </section>
-        </section>
+    </section>
     <section>
-        <section>
-            <p>Separation of Concerns</p>
-            <aside class="notes" data-markdown>
-                 rozdzielenie odpowiedzialności
-            </aside>
-        </section>
-        <section>
-            <p class='fragment'>React:</p>
-            <ul>
-                <li class='fragment'>Higher Order Components</li>
-                <li class='fragment'>Redux / Flux</li>
-                <li class='fragment'>JSX</li>
-                <li class='fragment'>Container Components</li>
-            </ul>
-            <aside class="notes" data-markdown>
+        <p><code>index.js</code></p>
+        <pre>
+<code data-trim data-noescape>
+@import 'main.sass'
 
-            </aside>
+document.body.innerHTML = '&lt;h1>Hello!&lt/h1> &lt;p>I am styled.&lt/p>'
+</code></pre>
+    </section>
+
+    <section>
+        <img src='img/itsdone.jpg' />
+    </section>
+</section>
+
+    <section data-markdown>
+        #### Frameworki CSS
+        * Bootstrap
+        * Foundation
+        * Semantic UI
+        * Pure.css
+        * UIkit
+        * Skeleton
+        * Susy
+    </section>
+
+    <section>
+        <section data-markdown>
+            ### Dobre i złe praktyki
         </section>
+        <section data-markdown>
+            #### co powinno być oczywiste...
+
+            * `!important`
+            * `&lt;p style="...`
+            * `.color-red`
+            * `#id-selectors`
+        </section>
+        <section data-markdown class='side-by-side'>
+            #### zagnieżdżanie vs. dobre nazewnictwo
+
+```SCSS
+// tak, kaskadowość jest potężna, ale...
+
+.Select {
+  &.has-value.is-clearable.Select--single {
+    > .Select-control .Select-value {
+      .icon {
+        content: "\e92b";
+        color: $rainbow;
+        //...
+      }
+    }
+  }
+}
+
+.evil-page {
+  .Select {
+    &.has-value.is-clearable.Select--single {
+      > .Select-control .Select-value {
+        .icon {
+          color: $abyss;
+        }
+      }
+    }
+  }
+}
+
+```
+
+```SCSS
+// lepiej trafnie opisywać rzeczywistość
+
+.select-icon {
+  content: "\e92b";
+  color: $rainbow;
+  //…
+}
+
+.evil-select-icon {
+  color: $abyss;
+}
+```
+        </section>
+
+        <section data-markdown>
+            #### 🍩 wszyscy kochają z-index...
+
+```SCSS
+.drop-down-menu-content {
+  display: absolute;
+  z-index: 999; //more than anything else
+}
+
+.popup {
+  display: fixed;
+  z-index: 9999; //even morer
+}
+
+.select-on-popup {
+  z-index: 99999; //kill me please
+}
+
+//and then:
+
+.enter-advert-overlay {
+  z-index:
+```
+        </section>
+
+        <section data-markdown>
+            SASS na ratunek 🧞‍
+
+```SCSS
+///
+//global z-indexes:
+
+$zindex-dropdown:       100;
+$zindex-sticky:         120;
+$zindex-fixed:          130;
+$zindex-modal-backdrop: 140;
+$zindex-modal:          150;
+$zindex-popover:        160;
+$zindex-tooltip:        170;
+
+```
+        </section>
+
+        <section data-markdown>
+            #### Nazewnictwo
+```SCSS
+//nieładnie
+$color-gray: #eee;
+$color-gray-second: #ccc;
+$color-gray-third: #666;
+
+//ładniej
+$color-gainsboro:  #DCDCDC;
+$color-lightgray:  #D3D3D3;
+$color-silver:     #C0C0C0;
+$color-darkgray:   #A9A9A9;
+$color-dimgray:    #696969;
+
+//$color-gray-#{percent}
+$color-gray-90:    #e6e6e6;
+
+//context-relevant - przepięknie
+$color-gray-shadow: #eee;
+```
+
+```SCSS
+//brzydko
+$color-red: #F00;
+
+//niebrzydko
+$color-brand: #F00;
+$color-accent: #F0F;
+$color-positive: #0F0;
+$color-negative: #F55;
+
+//akceptowalnie
+$color-black: #000;
+$color-white: #fff;
+```
+        </section>
+        <section >
+            <h4>@extend</h4>
+            <div class='fragment fade-left'>tylko z <br/>%placeholderami</div>
+        </section>
+        <section data-markdown>
+            #### jak żyć?!
+
+            * 7-1 pattern
+```bash
+sass/
+|
+|– abstracts/      # vars, mixins, functions, etc.
+|– base/           # fonts, helpers, resets
+|– components/
+|– layout/         # footer, header, grid, etc.
+|– pages/
+|– themes/
+|– vendors/
+`– main.scss       # Main Sass file
+```
+
+            * Boilerplates: [https://github.com/HugoGiraudel/sass-boilerplate/](https://github.com/HugoGiraudel/sass-boilerplate/)
+            * Linting: `sass-lint`, `scss-lint`, `style-lint`
+            * Methodologies
+        </section>
+
     </section>
         <section>
-            <!--<small>Lektura obowiązkowa:</small>-->
-            <!--<p>https://krasimir.gitbooks.io/react-in-patterns/</p>-->
-            <div>Wait?</div>
-            <div class='fragment'>Test, który pomógł w napisaniu lepszego testu?</div>
-            <p class='fragment'>Inne korzyści:</p>
-            <ul>
-                <li class='fragment'>czytelność kodu</li>
-                <li class='fragment'>łatwiej użyć komponentu gdzie indziej</li>
-                <li class='fragment'>łatwiejsza kooperacja - mniej konfliktów</li>
-                <li class='fragment'>łatwiej myśleć o pojedynczych problemach</li>
-            </ul>
+            <section>
+                <h2>Metodologie</h2>
+                <ul>
+                    <li class='fragment'>OOCSS</li>
+                    <li class='fragment'>SMACSS</li>
+                    <li class='fragment'>Atomic</li>
+                    <li class='fragment'>BEM</li>
+                </ul>
+                <aside class='notes' data-markdown>
+                    * konflikt: css -> cascading, js -> components
+                    * duże proj: css się rozrasta, niesuchy i nieużywany
+                    * sass tylko pogarsza sytuację
+                </aside>
+            </section>
+            <section>
+                <h4>oocss</h4>
+                <p>object oriented css</p>
+                <ul>
+                    <li>Rozdział struktury od skórki</li>
+                    <li>Rozdział kontenerów od treści</li>
+                </ul>
 
-            <aside class="notes" data-markdown>
-                Olga: 3 pierwsze punkty
-                Piotrek: ostatni punkt przykład step (jak będzie czas)
-            </aside>
+                <p><code>Object == 'recurring visual pattern'</code></p>
+
+                <aside class='notes' data-markdown>
+                    brak jednoznacznych i konkretnych zasad
+                    ad. 2: h2.myHeader lepsze niż .myDiv h2
+                </aside>
+            </section>
+            <section>
+                <h4>SMACSS</h4>
+                <p>Scalable and Modular Architecture for CSS</p>
+                <ul>
+                    <li>Base - podstawy</li>
+                    <li>Layout - ...layout? 🤔</li>
+                    <li>Module - komponenty</li>
+                    <li>State - stany</li>
+                    <li>Theme - skórka</li>
+                </ul>
+
+                <aside class='notes' data-markdown>
+                    * Base - a { color: }
+                    * Layout
+                    * Module - recurring
+                    * State - hover, active, open, etc
+                    * Theme
+                </aside>
+            </section>
+
+            <section>
+                <h4>Atomic CSS</h4>
+                <p>każdy styl -> nowa klasa</p>
+
+                <aside class='notes' data-markdown>
+                    * częste podejście we frameworkach
+                    * pros: modular, portable, no redundant styles, no conflicting styles, fast
+                    * cons: need to know each class, html grows,
+
+                    should use with automation, like acss
+                </aside>
+            </section>
+
+            <section>
+                <h4>BEM</h4>
+                <div class='h-container bem'>
+                    <div class='fragment'>
+                        <h5 style='color: #56D72B'>Block</h5>
+                        <p>Niezależny, atomowy obiekt, który ma sens sam w sobie. Komponent.</p>
+                        <p class='example'>nagłówek, avatar, menu,  checkbox, modal</p>
+                    </div>
+                    <div class='fragment'>
+                        <h5 style='color: #51A7F9'>Element</h5>
+                        <p>Element bloku. Kawałek HTMLa który występuje tylko w bloku, jest jego integralną częścią</p>
+                        <p class='example'>pozycja menu/listy, etykietka checkbox'a, tytuł w nagłówku, 'x' w modalu</p>
+                    </div>
+                    <div class='fragment'>
+                        <h5 style='color: #F39019'>Modifier</h5>
+                        <p>Flaga informująca o stanie, wersji, kontekście bloku (lub elementu)</p>
+                        <p class='example'>disabled, highlighted, checked, open, size big, color yellow</p>
+                    </div>
+                </div>
+
+                <div class='bem fragment'>
+                    <p><code><span style='color: #56D72B'>.block</span><span style='color: #51A7F9'>__element</span><span style='color: #F39019'>--modifier</span></code></p>
+                    <p><code><span style='color: #56D72B'>.block</span><span style='color: #51A7F9'>__element</span></code></p>
+                    <p><code><span style='color: #56D72B'>.block</span><span style='color: #F39019'>--modifier</span></code></p>
+                </div>
+
+                <aside class='notes' data-markdown>
+                    pros: modular, portable, no conflicting styles,
+                    cons: bloated
+                </aside>
+            </section>
+
+            <section data-markdown>
+
+```SCSS
+.user-list {              //block
+  padding: 5px;
+
+  &__header {             //element
+    @include h3-font;
+  }
+
+  &__item {
+    padding: 0 5px;
+
+    &--highlighted {     //modifier elementu
+      font-size: 2rem;
+      background: $color-list-highlight;
+    }
+  }
+
+  &--horizontal {        //modifier bloku
+    display: flex;
+
+    .user-list {
+      &__item {          //element w zmodyfikowanym bloku
+        padding: 5px 0;
+      }
+    }
+  }
+}
+```
+
+            </section>
+            <section>
+                <h5>Bloki to Komponenty </h5>
+	<pre><code data-noescape class='lang-HTML'>&lt;div class='user-card'> &lt;!-- user-card -->
+  &lt;div class='user-card__header'><span class='fragment'>
+    &lt;div class='card-header'>  &lt;!-- card-header -->
+      &lt;div class='card-header__title'>My profile&lt;/div>
+      &lt;div class='card-header__actions'>
+        <span class='fragment'>&lt;div class='card-header__button button button--hide'> - &lt;/div> &lt;!-- button -->
+        &lt;div class='card-header__button button button--expand'> + &lt;/div></span>
+      &lt;/div>
+    &lt;/div></span>
+  &lt;/div>
+  &lt;div class='user-card__content'>
+    things!
+  &lt;/div>
+&lt;/div>
+</code></pre>
+<pre class='fragment'><code class='lang-bash'>sass/
+|
+|– abstracts/
+|– base/
+|– components/
+    |
+    |- button.scss
+    |- card-header.scss
+    `- user-card.scss
+</code></pre>
+
+            </section>
+            <section data-markdown>
+                Założenia
+                * Kod dzielimy na Komponenty i mapujemy na Bloki
+                * Każdy blok to nowy plik
+                * Ograniczamy zagnieżdżanie SASSa
+                * Niewiele generycznych klas i styli
+                * Nie ma styli kontekstowych
+            </section>
+            <section>
+                <h5>Powszechne błędy</h5>
+                <div class='fragment side-by-side'>
+                    <p>"Zagnieżdżanie nazw" elementów</p>
+                    <pre><code>.list__item__title // NOPE!</code></pre>
+                        <pre class='fragment'><code class='lang-CSS'>.list__item  //👍
+.list__title</code></pre>
+                </div>
+                <div class='fragment'>
+                    <p>Kaskadowość</p>
+                    <pre><code class='lang-SCSS'>.user-card {
+
+  &__header {
+    padding: 0 5px;
+
+    .delete-button {
+      color: $color-navy;
+    }
+  }
+} </code></pre>
+                    <div class='fragment side-by-side'>
+                        <p><small>raczej:</small></p>
+                        <pre><code class='lang-SCSS'>.delete-button {
+  &—-inline {
+    color: $color-navy
+  }
+}</code></pre>
+                        <pre><code class='lang-SCSS'>.user-card {
+  &__button {
+    color: $color-navy;
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+            <section data-markdown class='side-by-side'>
+                #### błędy...
+```SCSS
+.user-list {
+  padding: 5px;
+
+  &__header {
+    @include h3-font;
+  }
+}
+```
+
+```SCSS
+.product-list {
+  color: $color-navy;
+
+  &__header {
+    @include h3-font;
+  }
+}
+```
+            </section>
+            <section data-markdown class='side-by-side'>
+                #### błędy...
+```SCSS
+.polaroid {
+
+//... default styles
+
+//--- modified versions:
+
+  &--elevated {
+    box-shadow: $card-shadow;
+    background: $color-white;
+
+    .polaroid {
+      &__image {
+        box-shadow: none;
+      }
+      &__caption {
+        border: 1px solid $color-navy;
+      }
+      &__title {
+        font-size: $font-size-h4;
+      }
+      &__description {
+        color: $color-default-text
+      }
+    }
+  }```
+
+```SCSS
+//and so on:
+
+  &--horizontal {
+    //some styles
+
+    .polaroid {
+      &__image { //...more styles
+      &__caption { //...
+      &__title { //...
+    }
+  }
+
+  &--tagged {
+    //some styles
+
+    .polaroid {
+      &__image { //...more styles
+      &__caption { //...
+      &__title { //...
+    }
+  }
+}
+
+```
+            </section>
+            <section class='side-by-side'>
+                <h5>więcej błędów... 🤭</h5>
+                <p><pre><code class='lang-HTML'><!-- bad!!! -->
+<div class='button--hide'> - </div>
+<div class='button--expand'> + </div></code></pre>
+                    <pre><code class='lang-HTML'><!-- good :) -->
+<div class='button button--hide'> - </div>
+<div class='button button--expand'> + </div></code></pre></p>
+
+                <div class='fragment'>
+                    <small>nie chce się pisać?</small>
+                </div>
+                <div class='fragment'>
+                    <pre><code>npm i -s bem-modifiers</code></pre>
+
+                </div>
+            </section>
         </section>
+
+        <section>
+            <section>
+                <h2>CSS-IN-JS</h2>
+                <aside class='notes' data-markdown>
+                    * bem for components - encapsulation
+                    problem: bloated styles
+                    * CSS-IN-JS has drawbacks
+                    * is controversial
+                    * is not inline css (next slide)
+                </aside>
+            </section>
+
+            <section>
+                <p>"Inline css" buduje się do:</p>
+                <pre><code class='lang-HTML'><p style="color: white; backgrond-color: black;">inline style!</p></code></pre>
+                <p class='fragment'>To nie jest CSS-IN-JS!</p>
+                <div class='fragment'><small >...to jest:</small>
+                <pre><code class='lang-HTML'><style>
+.hash136s21 {
+  background-color: black;
+  color: white;
+}
+</style>
+
+<p class="hash136s21">Hello CSS-in-JS</p>
+                </code></pre></div>
+            </section>
+            <section>
+                <small>Piszemy go w JS!</small>
+                <pre><code class='lang-javascript'>const styles = {
+    wrapper: {
+        background: 'black'
+    },
+    title: {
+        color: 'white'
+    }
+};
+
+applyStyles(myComponent, styles); // zmyślony przykład
+</code></pre>
+
+            </section>
+            <section>
+                <h5>👍 Zalety 👍</h5>
+
+                <ul>
+                    <li class="fragment">Komponentowy</li>
+                    <li class="fragment">Pełne wykorzystanie JS</li>
+                    <li class="fragment">100% wyizolowane style</li>
+                    <li class="fragment">Code sharing</li>
+                    <li class="fragment">Dołączane tylko obecnie potrzebne style</li>
+                    <li class="fragment">Brak nieużywanych regół</li>
+                    <li class="fragment">Unit testy dla CSS! (jak już ktoś bardzo chce...)</li>
+                    <li class="fragment">Łatwy setup (z webpackiem)</li>
+                </ul>
+            </section>
+            <section>
+                <h5>👎 Wady 👎</h5>
+                <ul>
+                    <li class='fragment'>Jeszcze jedna abstrakcja do wyuczenia.</li>
+                    <li class='fragment'>Słabe wykorzystanie cache przeglądarki (przy SSR).</li>
+                    <li class='fragment'>Kolejne zależności.</li>
+                    <li class='fragment'>Brak korzyści z BEMowskiego myślenia o komponentach.</li>
+                    <li class="fragment">Tylko dla SPA / SSR 🤔</li>
+                    <li class="fragment">Pożenione z Frameworkami JS 🤔</li>
+                </ul>
+                <aside class='notes' data-markdown>
+                    * new to FE have to learn “more” things.
+                    * need to know SASS and CSS anyway
+                </aside>
+            </section>
+            <section>
+                <h5>Co mamy do wyboru?</h5>
+                <img src='img/trends.png' style='padding: 1%'>
+            </section>
+            <section>
+                <h5>...a konfiguracja?</h5>
+                <p class='fragment'>...</p>
+                <p class='fragment'>...</p>
+                <div class='fragment'><pre><code>npm i --s @emotion/core</code></pre></div>
+                <p class='fragment'>Zrobione! 🍻</p>
+            </section>
+        </section>
+
+        <section data-markdown>
+            #### Zadanie domowe 🏡
+
+            1. Rozszerzyć naszą konfigurację webpacka tak, aby:
+                - kompilował SASSa
+                - załączał style do projektu
+            1. Wdrożyć projekt
+            1. Użyć BEM i przemyśleć podział projektu na bloki
+        </section>
+        <section>
+            Muchas gracias!
+        </section>
+
     </div>
 </div>
 
@@ -530,6 +1017,7 @@ it('Snapshot: failed', () => {
     // - https://github.com/hakimel/reveal.js#configuration
     // - https://github.com/hakimel/reveal.js#dependencies
     Reveal.initialize({
+        history: true,
         dependencies: [
             { src: 'plugin/markdown/marked.js' },
             { src: 'plugin/markdown/markdown.js' },
