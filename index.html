@@ -41,6 +41,16 @@
 
             </aside>
         </section>
+        <!--<section data-markdown>-->
+            <!--#### kod zajęć-->
+
+            <!--`169251`-->
+
+            <!--wifi: Daftcode_Front_End-->
+
+            <!--pass: kursfrontend-->
+
+        <!--</section>-->
         <section>
             <section>
                 <h5>CSS reset i normalize</h5>
@@ -416,8 +426,12 @@ nav
     <section>
         <h3>sass + webpack</h3>
         <pre class='fragment fade-right'>
-<code data-trim data-noescape>
-    > npm i -s sass-loader <span class='fragment fade-in'>css-loader </span><span class='fragment fade-in'>style-loader</span> <span class='fragment fade-in'>mini-css-extract-plugin</span> <span class='fragment fade-in'>postcss-loader</span> <span class='fragment fade-in'>postcss-preset-env</span>
+<code data-trim data-noescape class='lang-HTML'>
+    > npm i -s sass-loader <span class='fragment fade-in'>node-sass</span> <span class='fragment fade-in'>css-loader </span><span class='fragment fade-in'>style-loader</span>
+</code></pre>
+        <pre class='fragment fade-right'>
+<code data-trim data-noescape class='lang-HTML'>
+    > npm i -s mini-css-extract-plugin <span class='fragment fade-in'>postcss-loader</span> <span class='fragment fade-in'>postcss-preset-env</span>
 </code></pre>
         <br/>
 
@@ -470,7 +484,7 @@ module.exports = {
         <p><code>index.js</code></p>
         <pre>
 <code data-trim data-noescape>
-@import 'main.sass'
+import 'main.sass'
 
 document.body.innerHTML = '&lt;h1>Hello!&lt/h1> &lt;p>I am styled.&lt/p>'
 </code></pre>
@@ -1044,9 +1058,14 @@ applyStyles(myComponent, styles); // zmyślony przykład
                    - kompilował SASSa
                    - załączał style do projektu
                    - automatycznie dołączał prefixy przeglądarek do styli (postcss)
-                1. Wdrożyć projekt
+                2. Wdrożyć projekt
                    - Zaimplementować przedstawiony layout (HTML + SASS)
                    - Zastosować metodologię BEM
+                   - RWD nie jest wymagane, ale będzie dodatkowo punktowane
+
+                Pracę domową wykonaj na podstawie rozwiązania z lekcji pierwszej:
+                https://github.com/daftcode/daftacademy-frontend_levelup-spring2019/tree/master/prace_domowe/lekcja_1/praca_domowa-rozwi%C4%85zanie
+                lub wykorzystaj własne rozwiązanie
             </section>
             <section>
                 <img src='img/praca_domowa.png' alt='' style='padding: .7%'>
