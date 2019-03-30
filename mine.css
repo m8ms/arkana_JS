@@ -92,9 +92,18 @@
 .reveal .side-by-side pre {
     display: inline-block;
     vertical-align: top;
-    width: 40%;
+    width: 48%;
 }
 
 .reveal .side-by-side pre + pre {
     margin-top: 0
+}
+
+.reveal pre code {
+    max-height: 500px;
+}
+
+.reveal pre {
+    font-size: .35em;
+    width: 100%;
 }
