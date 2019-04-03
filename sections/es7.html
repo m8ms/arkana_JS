@@ -8,13 +8,19 @@
     <ul>
         <li class='fragment'><code>Object.values</code></li>
         <li class='fragment'><code>Object.entries</code></li>
-        <li class='fragment'><code>[].includes</code></li>
+        <li class='fragment'><code>Array.prototype.includes</code></li>
+        <li class='fragment'>
+            <code>
+            String.prototype.strPad
+            </code>
+            <pre><code class='lang-javascript'>'John'.strPad(7, '*') // "****John"</code></pre>
+        </li>
     </ul>
 </section>
 
 <section>
     <h4>async/await</h4>
-    <pre><code class='lang-javascript'>async function fetchContent() {
+    async function fetchContent() {
 
     let content = await fetch('/api/content') // poczeka na content
     let text = await content.text() // poczeka na text
