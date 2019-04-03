@@ -1,0 +1,155 @@
+<section>
+    <h3>Podstawy II</h3>
+    <h4>Zasięg i domknięcie</h4>
+    <p><small>(a.k.a. scope & closure)</small></p>
+</section>
+<section>
+    <h4>zasięg zmiennych</h4>
+    <pre><code class='lang-javascript' data-noescape>var x = 16
+var y = 17
+
+function changeVars() {
+    x = 24
+    z = 32
+
+    var y = 18
+    var p = 2
+
+    for (var i = 0; i < y; i++) {
+        // do stuffs
+    }
+    console.log(i)
+}
+
+changeVars()
+
+<span class='fragment'>console.log(x) // 24</span>
+<span class='fragment'>console.log(y) // 17</span>
+<span class='fragment'>console.log(z) // 32</span>
+<span class='fragment'>console.log(p) // "ReferenceError: p is not defined"</span></code></pre>
+</section>
+
+<section class='side-by-side'>
+    <p><code>var</code> vs. <code>let</code> (ES6)</p>
+    <pre><code class='lang-javascript' data-noescape>function something() {
+    // v widoczne tu
+
+    for( var v = 0; v < 5;  v++ ) {
+        // v widoczne, ale żyje piętro wyżej
+    }
+
+    // v widoczne tutaj
+}</code></pre>
+<pre><code class='lang-javascript' data-noescape>function somethingElse() {
+    // l nie ma tutaj
+
+    for( let l = 0; l < 5; l++ ) {
+        // l widoczne tylko tu (i głębiej)
+        // każda iteracja ma nową instancję l
+    }
+
+    // l tutaj już nie ma
+}</code></pre>
+    <div class='fragment'>
+        <p><small>globalnie:</small></p>
+    <pre><code class='lang-javascript' data-noescape>let me = 'go';
+console.log(window.me); // undefined</code></pre>
+    <pre><code class='lang-javascript' data-noescape>var i = 'able';
+console.log(window.i); // 'able'</code></pre>
+    </div>
+    <p></p>
+    <div class='fragment'>
+<pre><code class='lang-javascript' data-noescape>'use strict';
+let me = 'foo';
+let me = 'bar'; // SyntaxError: Identifier 'me'
+                // has already been declared</code></pre>
+<pre><code class='lang-javascript' data-noescape>'use strict';
+var me = 'foo';
+var me = 'bar'; // No problem</code></pre>
+    </div>
+</section>
+<section>
+    <h5><code>var</code></h5>
+    <pre><code class='lang-javascript'>for(var i = 1; i < 6; i++) {
+  document.getElementById('my-element' + i)
+    .addEventListener('click', function() { alert(i) })
+}</code></pre>
+    <p></p>
+    <h5><code>let</code></h5>
+    <pre><code class='lang-javascript'>for(let i = 1; i < 6; i++) {
+  document.getElementById('my-element' + i)
+    .addEventListener('click', function() { alert(i) })
+}</code></pre>
+
+<aside class='notes'>
+    przykra różnica <br>
+    const zachowuje się identycznie jak let
+</aside>
+</section>
+
+<section>
+    <h4>Domknięcie</h4>
+    <p class='fragment'>ale najpierw... <span class='fragment'>IIFE!</span></p>
+    <p class='fragment'><small>Immediately Invoked Function Expression</small></p>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>let kwadrat7 = (function (param) {
+    console.log('robimy kwadrat')
+
+    return param * param
+})(7) <span class='fragment'>// 👈 od razu wywołana</span></code></pre>
+</section>
+<section>
+    <h4>Domknięcie</h4>
+    <pre><code class='lang-javascript' data-noescape>let giveMeMore = (function () {
+    let i = 0 // zmienna prywatna
+
+    const iterator = function() {
+        return i++ // operacja na prywatnej zmiennej
+    }
+    return iterator
+})()
+
+giveMeMore() // 0
+giveMeMore() // 1
+giveMeMore() // 2
+giveMeMore() // 3
+giveMeMore() // 4</code></pre>
+<aside class='notes'>
+    closure ~= funkcja wraz z kontekstem w którym została wywołana
+</aside>
+</section>
+
+<!--
+<section>
+    <h4>Domknięcie i prywatność</h4>
+    <pre><code class='lang-javascript' data-noescape>let SecretClub = (function () {
+    let privateMembers = []
+    let secretLocation = location
+
+    class Club {
+        constructor (location) {
+            secretLocation = location
+        }
+
+        addMember (person) {
+            privateMembers.push(person)
+        }
+
+        getMemberCount () {
+            return privateMembers.length
+        }
+    }
+
+    return Club
+})()
+
+<span class='fragment'>const illuminati = new SecretClub("Radom")</span>
+<span class='fragment'>illuminati.addMember("Reptilian George")
+illuminati.addMember("Tom Cruise")
+illuminati.addMember("Magda Gessler")</span>
+<span class='fragment'>illuminati.getMemberCount() // 3</span>
+
+<span class='fragment'>console.log(illuminati.privateMembers) // undefined</span>
+<span class='fragment'>console.log(illuminati.secretLocation) // undefined</span></code></pre>
+
+</section>
+-->

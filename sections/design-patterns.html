@@ -1,0 +1,297 @@
+<section>
+    <h3>Wzorce projektowe w JS</h3>
+    <p>
+        <small>a.k.a. design patterns</small>
+    </p>
+    <aside class='notes'>
+        "uniwersalne, sprawdzone w praktyce rozwiązanie często pojawiających się, powtarzalnych problemów projektowych"
+    </aside>
+</section>
+<section>
+    <h4>Moduł</h4>
+    <pre><code class='lang-javascript' data-noescape>var secretClub = function (config) {
+    // przestrzeń prywatna:
+    var privateMembers = []
+    var secretLocation = config.location
+
+    // publiczny "interfejs" modułu
+    return {
+        addMember: function (person) {
+            privateMembers.push(person)
+        },
+        getMemberCount: function () {
+            return privateMembers.length
+        }
+    }
+}
+
+<span class='fragment'>var illuminati = secretClub({ location: 'Radom' })</span>
+
+<span class='fragment'>illuminati.addMember('Reptilian George')
+illuminati.addMember('Tom Cruise')
+illuminati.addMember('Magda Gessler')</span>
+
+<span class='fragment'>illuminati.getMemberCount() // 3</span>
+
+<span class='fragment'>console.log(illuminati.privateMembers) // undefined
+console.log(illuminati.secretLocation) // undefined</span></code></pre>
+    </code></pre>
+    <aside class='notes'>
+        często podstawowy blok aplikacji
+    </aside>
+</section>
+
+<section>
+    <h4>Moduł - podstawowy budulec aplikacji</h4>
+    <pre><code class='lang-javascript' data-noescape>// składnia commonJS (nodejs)
+
+// biblioteki/inne moduły
+var moment = require('moment')
+var WorldOrder = require('world-order')
+
+// przestrzeń prywatna:
+var _privateMembers = []
+var _secretLocation = config.location
+var _newWorldOrder = new WorldOrder()
+
+// prywatne funkcje
+var _conspire () {
+    if (moment().day() % 7) { _newWorldOrder.meddle() }
+}
+
+// publiczne "API" wyeksportowane
+module.exports = {
+    addMember: function (person) {
+        privateMembers.push(person)
+    },
+    getMemberCount: function () {
+        return privateMembers.length
+    }
+}</code></pre>
+    <pre class='fragment'><code class='lang-javascript'
+                                data-noescape>var secretClub = require('secretClubModule')</code></pre>
+</section>
+
+<section>
+    <h4>Moduł w ES5</h4>
+    <pre><code class='lang-javascript' data-noescape>// składnia ES5
+// biblioteki/inne moduły
+import moment from 'moment'
+import WorldOrder from 'world-order'
+
+// przestrzeń prywatna:
+var _privateMembers = []
+var _secretLocation = config.location
+var newWorldOrder = new WorldOrder()
+
+// prywatne funkcje
+var _conspire () {
+    if (moment().day() % 7) { newWorldOrder.meddle() }
+}
+
+// publiczne "API" wyeksportowane
+export default {
+    addMember: function (person) {
+        privateMembers.push(person)
+    },
+    getMemberCount: function () {
+        return privateMembers.length
+    }
+}</code></pre>
+    <pre class='fragment'><code class='lang-javascript'
+                                data-noescape>import secretClub from 'secretClubModule'</code></pre>
+
+</section>
+<section>
+    <h4>Obserwator 🔭</h4>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>class ObserverList {
+    constructor() {
+        this.observerList = []
+    }
+
+    count () {}
+    add (obj) {}
+    get (index) {}
+    indexOf (obj, startIndex) {}
+    removeAt (index) {}
+}</code></pre>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>class Subject {
+    constructor() {
+        this.observers = new ObserverList()
+    }
+
+    addObserver (observer) {
+      this.observers.add( observer )
+    }
+
+    removeObserver (observer) {
+        this.observers.removeAt( this.observers.indexOf( observer, 0 ) )
+    }
+
+    notify (event) {
+        var observerCount = this.observers.count()
+        for (let i = 0; i < observerCount; i++){
+            this.observers.get(i).update(event)
+        }
+    }
+}</code></pre>
+    <aside class='notes'>
+        Subject przechowuje listę obiektów, które informuje o jakichś zmianach
+        <br />
+        Observer musi miec funkcję update()
+        <br>
+    </aside>
+</section>
+
+<section>
+    <h4>Publish/Subscribe 🗞</h4>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>import pubsub from 'pubsub-js'
+
+// subskrybent
+var mySubscriber = function (msg, data) {
+    console.log( msg, data );
+};
+
+// dodajemy do listy subskrybentów na dany "temat"
+var token = PubSub.subscribe('MY TOPIC', mySubscriber);
+
+// ...in a galaxy far far away
+
+// publikujemy:
+PubSub.publish('MY TOPIC', { data: 'tie-fighters'});</code></pre>
+
+    <aside class='notes' data-markdown>
+        zalety
+        - łatwo zarządzać globalnymi i asynchronicznymi wydarzeniami
+        - pomaga rozdzielić warstwę danych od warstwy prezentacji
+        wady
+        - łatwo się pogubić
+        - możliwy wyścig
+
+        uwagi
+        - events? nie bubbluje, nie trzeba custom events
+    </aside>
+</section>
+
+<section>
+    <h4>Fabryka 🏭</h4>
+    <div class='side-by-side'>
+    <pre><code class='lang-javascript' data-noescape>class Car {
+    constructor (options) {
+        this.doors = options.doors || 4
+        this.state = options.state || "brand new"
+        this.color = options.color || "silver"
+    }
+}</code></pre>
+        <pre><code class='lang-javascript' data-noescape>class Truck{
+    constructor (options) {
+        this.state = options.state || "used"
+        this.color = options.color || "blue"
+        this.maxCapacity = options.maxCapacity
+    }
+}</code></pre>
+    </div>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>class VehicleFactory() {
+    constructor () {
+        this.vehicleClass = Car
+        this.producedCars.push(producedVehicle)
+    }
+
+    createVehicle (options) {
+        if (options.vehicleType === "car") {
+            this.vehicleClass = Car
+        } else if (options.vehicleType === "truck") {
+            this.vehicleClass = Truck
+        }
+        var producedVehicle = new this.vehicleClass(options)
+        this.producedCars.push(producedVehicle)
+        return producedVehicle
+    }
+
+    explodeAllProducedVehicles () {
+        this.producedVehicles.forEach(function (vehicle) {
+            this.explodeVehicle(vehicle)
+        }
+    }
+    // ...
+}</code></pre>
+</section>
+
+<section>
+    <h4>Mixin i dekorator</h4>
+    <div class='side-by-side'>
+    <pre><code class='lang-javascript' data-noescape>var moveMixin = {
+    moveUp: function (amount) {
+        if(this.y || this.y === 0) {
+            this.y +=amount
+        }
+    },
+    moveDown: function (amount) {},
+    moveLeft: function (amount) {},
+    moveRight: function (amount) {},
+}</code></pre>
+        <pre><code class='lang-javascript' data-noescape>var moveDecorator = function(obj, initial) {
+    obj.x = initial.x || 0
+    obj.y = initial.y || 0
+    var moveUp = function (amount) {}
+    var moveDown = function (amount) {}
+    var moveRight = function (amount) {}
+    var moveLeft = function (amount) {}
+    obj.moveUp = (moveUp).bind(obj)
+    obj.moveDown = (moveDown).bind(obj)
+    obj.moveRight = (moveRight).bind(obj)
+    obj.moveLeft = (moveLeft).bind(obj)
+}</code></pre>
+        <p></p>
+        <pre class='fragment'><code class='lang-javascript' data-noescape>thing.prototype = moveMixin</code></pre>
+        <pre class='fragment'><code class='lang-javascript' data-noescape>moveDecorator(thing)</code></pre>
+    </div>
+</section>
+
+<section>
+    <ul>
+        <li>singleton</li>
+        <li>mediator</li>
+        <li>fasada</li>
+        <li>flightweight</li>
+    </ul>
+</section>
+
+<section>
+    <h4>MV*</h4>
+    <p><small>MVC: Model View Controller</small></p>
+    <p><small>MVP: Model View Presenter</small></p>
+    <p><small>MVVM: Model View ViewModel</small></p>
+    <aside class='notes'>
+        MVC: backbone.js
+    </aside>
+</section>
+
+<section>
+    <h4>Flux</h4>
+    <ul>
+        <li class='fragment'>pochodzi z Reacta</li>
+        <li class='fragment'>Widoki + Magazyny + Dispatcher + Akcje</li>
+        <li class='fragment'>Jednokierunkowy przepływ zdarzeń (akcji)</li>
+        <li class='fragment'>Ma kilka implementacji</li>
+    </ul>
+    <img src='img/flux.png' class='fragment'>
+</section>
+
+<section>
+    <h4>Redux</h4>
+    <ul>
+        <li class='fragment'>Inspirowany fluxem</li>
+        <li class='fragment'>Jednokierunkowy przepływ zdarzeń</li>
+        <li class='fragment'>Widoki + 1 Magazyn + Reducery + Akcje</li>
+        <li class='fragment'>Magazyn "immutable": tzw. jedno źródło prawdy</li>
+        <li class='fragment'>Wcale nie ograniczony do Reacta</li>
+    </ul>
+</section>
+
+<section>
+    <img src='img/redux.png'>
+    <aside class='notes'>
+        można wspomnieć o mobX
+    </aside>
+</section>

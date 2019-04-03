@@ -1,0 +1,78 @@
+<section>
+    <h3>Nowoczesny JS</h3>
+    <p style='opacity: .5; font-size: .8em'>ES7, ES8, ES9</p>
+</section>
+
+<section>
+    <h4>Wbudowane metody</h4>
+    <ul>
+        <li class='fragment'><code>Object.values</code></li>
+        <li class='fragment'><code>Object.entries</code></li>
+        <li class='fragment'><code>[].includes</code></li>
+    </ul>
+</section>
+
+<section>
+    <h4>async/await</h4>
+    <pre><code class='lang-javascript'>async function fetchContent() {
+
+    let content = await fetch('/api/content') // poczeka na content
+    let text = await content.text() // poczeka na text
+
+    return text // zwróci Promise, który zostanie rozwiązany (resolved) jak wykonają się await'y
+}</code></pre>
+</section>
+
+<section>
+    <h4>przecinki</h4>
+    <pre><code class='lang-javascript'>let obj = {
+    first: 'Jane',
+    last: 'Doe',
+}</code></pre>
+    <p class='fragment'>...po co?</p>
+    <div class='fragment side-by-side'>
+    <pre><code class='lang-javascript'>// git diff:
+  let obj = {
+    first: 'Jane',
+    last: 'Doe',
++   next: 'es9',
+  }</code></pre>
+        <pre><code class='lang-javascript'>// git diff:
+  let obj = {
+    first: 'Jane',
+-   last: 'Doe'
++   last: 'Doe',
++   next: 'es9',
+  }</code></pre>
+    </div>
+</section>
+
+<section>
+    <h4>Dekoratory </h4>
+    <pre><code class='lang-javascript'>class Cat {
+    meow () { return this.name + ' says meow' }
+}</code></pre><p></p>
+    <pre class='fragment'><code class='lang-javascript'>// dekorator:
+const readOnly = (target, name, descriptor) => {
+    descriptor.writable = false
+    return descriptor
+}</code></pre><p></p>
+    <pre class='fragment'><code class='lang-javascript'>// udekorowana metoda
+class Cat {
+    @readOnly
+    meow () { return this.name + ' says meow' }
+}</code></pre><p></p>
+    <pre class='fragment'><code class='lang-javascript'>// dekorować można klasy
+const withLegs = (legCount) => (WrappedClass) => {
+    class WithLegs extends WrappedClass {
+        constructor(...args) {
+            super(...args)
+            this.legs = legCount
+        }
+    }
+    return WithLegs
+}
+
+@withLegs(4) // i dodawać konfigurację!
+class Cat { ... }</code></pre>
+</section>

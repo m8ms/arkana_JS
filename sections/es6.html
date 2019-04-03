@@ -1,0 +1,580 @@
+<section>
+    <h3>Nowoczesny JS</h3>
+    <p class='fragment'><code>ECMAscript 2015</code></p>
+    <p class='fragment' style='opacity: .5; font-size: .8em'>a.k.a. ES6</p>
+</section>
+<section>
+<h5><code>let</code> & <code>const</code></h5>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript'>//const - tylko referencja jest stała!
+const x = 17
+x++ // no way Jose
+
+// ale...
+const thing = { x = 17 }
+thing.x = 18 // no problemo
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>Object.freeze(thing)
+
+this.x = 3 // nope!
+</code></pre>
+    </div>
+
+    <aside class='notes'>
+        Object.freeze - immutable
+    </aside>
+</section>
+
+<section>
+    <h4>funkcje strzałkowe</h4>
+    <p>arrow functions</p>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript'>// es6
+const adding = (a, b) => a + b
+</code></pre>
+        <pre class='fragment'><code class='lang-javascript'>// es5
+var adding = function (a, b) { return a + b }
+</code></pre>
+    </div>
+    <p></p>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript'>// es6
+nums.forEach(v => {
+   if (v % 5 === 0)
+       fives.push(v)
+})
+</code></pre>
+        <pre class='fragment'><code class='lang-javascript'>// es5
+nums.forEach(function (v) {
+   if (v % 5 === 0)
+       fives.push(v);
+});
+</code></pre>
+    </div>
+    <p class='fragment'><code>this</code></p>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript'>// es6
+this.nums.forEach((v) => {
+    if (v % 5 === 0)
+        this.fives.push(v)
+})</code></pre>
+        <pre class='fragment'><code class='lang-javascript'>// es5
+var self = this;
+this.nums.forEach(function (v) {
+    if (v % 5 === 0)
+        self.fives.push(v);
+});
+</code></pre>
+    </div>
+
+</section>
+
+<section>
+    <h4>domyślne wartości parametrów</h4>
+
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript'>// es6
+function f (x, y = 7, z = 42) {
+    return x + y + z
+}
+f(1) === 50
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>// es5
+function f (x, y, z) {
+    if (y === undefined)
+        y = 7;
+    if (z === undefined)
+        z = 42;
+    return x + y + z;
+};</code></pre>
+    </div>
+</section>
+
+<section>
+    <h4>parametr ...rest</h4>
+
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-markdown>// es6
+function f (x, y, ...a) {
+    return (x + y) \* a.length
+}
+f(1, 2, "hello", true, 7) === 9
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// es5
+function f (x, y) {
+    var a = Array.prototype
+        .slice
+        .call(arguments, 2)
+    return (x + y) \* a.length
+};
+f(1, 2, "hello", true, 7) === 9
+</code></pre>
+    </div>
+</section>
+
+<section>
+    <h4>operacja spread</h4>
+
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-markdown>// es6
+var params = [ "hello", true, 7 ]
+var other = [ 1, 2, ...params ]
+        // [ 1, 2, "hello", true, 7 ]
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// es5
+var params = [ "hello", true, 7 ];
+var other = [ 1, 2 ].concat(params);
+        // [ 1, 2, "hello", true, 7 ]
+</code></pre>
+    </div>
+    <p></p>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-markdown>// es6
+f(1, 2, ...params)
+</code></pre>
+        <pre class='fragment'><code class='lang-javascript' data-noescape>// es5
+f.apply(undefined, [ 1, 2 ].concat(params))
+</code></pre>
+    </div>
+    <p></p>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-markdown>// es6
+const a = { turtle: 'pink', whale: 'yellow' }
+const b = {
+    sheep: 'black',
+    ...a
+}
+</code></pre>
+        <pre class='fragment'><code class='lang-javascript' data-noescape>// es5
+var a = { turtle: 'pink', whale: 'yellow' }
+var b = { sheep: 'black' }
+for (var key in a) {
+    if(a.hasOwnProperty(key) {
+        b[key] = a[key]
+    }
+}
+</code></pre>
+    </div>
+</section>
+
+<section>
+    <h4>Interpolacja tekstu</h4>
+
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// es6
+var message = \`Hello ${customer.name},
+want to buy ${card.amount} ${card.product}
+for a total of
+${card.amount \* card.unitprice} bucks?\`</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>// es5
+var message = "Hello " + customer.name + ",\\n" +
+"want to buy " + card.amount + " " + card.product +
+"\\n for a total of\\n" +
+(card.amount \* card.unitprice) + " bucks?"
+</code></pre>
+    </div>
+</section>
+
+<section>
+    <h4>🔑 klucze obiektów 🗝</h4>
+
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// es6
+var x = 0, y = 0
+obj = { x, y }
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>// es5
+var x = 0, y = 0
+obj = { x: x, y: y }
+</code></pre>
+    </div><p></p>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// es6
+let obj = {
+    foo: "bar",
+    [ "baz" + quux() ]: 42
+}
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>// es5
+var obj = {
+    foo: "bar"
+}
+obj[ "baz" + quux() ] = 42
+</code></pre>
+    </div><p></p>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// es6
+obj = {
+    foo (a, b) {
+        …
+    },
+    bar (x, y) {
+        …
+    }
+}
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>// es5
+obj = {
+    foo: function (a, b) {
+        …
+    },
+    bar: function (x, y) {
+        …
+    }
+}
+</code></pre>
+    </div>
+</section>
+
+<section>
+    <h4>🤘 Destrukcja 🤘</h4>
+
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// es6
+var list = [ 1, 2, 3 ]
+var [ a, , b ] = list
+[ b, a ] = [ a, b ]
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>// es5
+var list = [ 1, 2, 3 ];
+var a = list[0], b = list[2];
+var tmp = a; a = b; b = tmp;
+</code></pre>
+    </div><p></p>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// es6
+var { op, lhs, rhs } = getASTNode()
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>// es5
+var tmp = getASTNode()
+var op  = tmp.op
+var lhs = tmp.lhs
+var rhs = tmp.rhs
+</code></pre>
+    </div><p></p>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// es6
+var obj = { a: 1 }
+var list = [ 1 ]
+var { a, b = 2 } = obj
+var [ x, y = 2 ] = list
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>// es5
+var a = obj.a
+var b = obj.b === undefined ? 2 : obj.b
+var x = list[0]
+var y = list[1] === undefined ? 2 : list[1]
+</code></pre>
+    </div><p></p>
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// es6
+function f ([ name, val ]) {
+    console.log(name, val)
+}
+function g ({ name: n, val: v }) {
+    console.log(n, v)
+}
+function h ({ name, val }) {
+    console.log(name, val)
+}
+f([ "bar", 42 ])
+g({ name: "foo", val:  7 })
+h({ name: "bar", val: 42 })
+</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>// es5
+function f (arg) {
+    var name = arg[0]
+    var val  = arg[1]
+    console.log(name, val)
+}
+function g (arg) {
+    var n = arg.name
+    var v = arg.val
+    console.log(n, v)
+}
+function h (arg) {
+    var name = arg.name
+    var val  = arg.val
+    console.log(name, val)
+}
+</code></pre>
+    </div>
+</section>
+
+<section>
+    <h4>Moduły</h4>
+
+    <pre class='fragment'><code class='lang-javascript' data-noescape>//  lib/math.js
+export function sum (x, y) { return x + y }
+export var pi = 3.141593
+
+//  someApp.js
+import \* as math from "lib/math"
+console.log("2π = " + math.sum(math.pi, math.pi))
+
+//  otherApp.js
+import { sum, pi } from "lib/math"
+console.log("2π = " + sum(pi, pi))
+</code></pre>
+<p></p>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>//  lib/mathplusplus.js
+export \* from "lib/math"
+export var e = 2.71828182846
+export default (x) => Math.exp(x)
+
+//  someApp.js
+import exp, { pi, e } from "lib/mathplusplus"
+console.log("e^{π} = " + exp(pi))
+</code></pre>
+</section>
+
+<section>
+    <h4>klasy</h4>
+
+    <div class='side-by-side'>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>class Shape {
+    constructor (id, x, y) {
+        this.id = id
+        this.move(x, y)
+    }
+    move (x, y) {
+        this.x = x
+        this.y = y
+    }
+    toString () {
+        return \`Shape(${this.id})\`
+    }
+}
+</code></pre>
+        <pre class='fragment'><code class='lang-javascript'>// dziedziczenie
+class Rectangle extends Shape {
+    constructor (id, x, y, width, height) {
+        super(id, x, y)
+        this.width  = width
+        this.height = height
+    }
+
+    toString () {
+        return "Rectangle > " + super.toString()
+    }
+
+    // getter i setter
+    set width  (width)  { this._width = width }
+    get width  ()       { return this._width }
+
+    // metoda statyczna
+    static defaultRectangle () {
+        return
+            new Rectangle("default", 0, 0, 10, 10)
+    }
+}
+</code></pre>
+    </div>
+</section>
+
+<section>
+    <h4>dziedziczenie po wielu klasach</h4>
+    <pre class='fragment'><code class='lang-javascript'>class Colored { // mixin
+    initializer ()     { this._color = "white" }
+    get color ()       { return this._color }
+    set color (v)      { this._color = v }
+}
+
+class ZCoord { // mixin
+    initializer ()     { this._z = 0 }
+    get z ()           { return this._z }
+    set z (v)          { this._z = v }
+}
+
+class Shape { // klasa <bazowa></bazowa>
+    constructor (x, y) { this._x = x; this._y = y }
+    get x ()           { return this._x }
+    set x (v)          { this._x = v }
+    get y ()           { return this._y }
+    set y (v)          { this._y = v }
+}</code></pre>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>var aggregation = require("aggregation/es6") // https://github.com/rse/aggregation
+
+class Rectangle extends aggregation(Shape, Colored, ZCoord) {
+    // ...definicja samego Rectangle
+}
+
+const rect = new Rectangle(7, 42)
+rect.z     = 1000
+rect.color = "red"</code></pre>
+</section>
+
+<section>
+    <h4>symbole ♏️</h4>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>const obj = {
+[Symbol('my_key')]  : 1,
+[Symbol('my_key')]  : 2,
+[Symbol('key')]     : 3,
+   a                : 4,
+   b                : 5
+};
+
+> Object.getOwnPropertyNames(obj)
+['a', 'b']
+
+> Object.getOwnPropertySymbols(obj)
+[Symbol(my_key),Symbol(my_key),Symbol(key)]
+
+> Reflect.ownKeys(obj)
+[Symbol(my_key),Symbol(my_key),Symbol(key),'a', 'b']
+
+> Object.keys(obj)
+['a','b']
+
+> Symbol('foo') === Symbol('foo')
+false
+    </code></pre>
+    <aside class='notes' data-markdown>
+        po co to komu?
+        * enumy { a: Symbol('a') }
+        * żeby uniknąć konfliktów nazw w obiektach
+    </aside>
+</section>
+
+<section>
+    <h5>"for ... of" i iteratory</h5>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>let fibonacci = {
+    \[Symbol.iterator\]() {
+        let pre = 0, cur = 1
+        return {
+           next () {
+               [ pre, cur ] = [ cur, pre + cur ]
+               return { done: false, value: cur }
+           }
+        }
+    }
+}</code></pre><p></p><pre class='fragment'><code class='lang-javascript' data-noescape>
+for (let n of fibonacci) {
+    if (n > 1000)
+        break
+    console.log(n)
+}</code></pre>
+</section>
+
+<section>
+    <h4>Generatory</h4>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>function\* range (start, end, step) {
+    while (start < end) {
+        yield start
+        start += step
+    }
+}
+
+for (let i of range(0, 10, 2)) {
+    console.log(i) // 0, 2, 4, 6, 8
+}</code></pre><p></p>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>let fibonacci = function\* (numbers) {
+    let pre = 0, cur = 1
+    while (numbers-- > 0) {
+        [ pre, cur ] = [ cur, pre + cur ]
+        yield cur
+    }
+}
+
+for (let n of fibonacci(1000))
+    console.log(n)
+
+let numbers = [ ...fibonacci(1000) ]
+
+let [ n1, n2, n3, ...others ] = fibonacci(1000)</code></pre>
+</section>
+
+<section>
+    <h4>📚 zbiór i mapa 🗺</h4>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>let s = new Set()
+s.add("hello").add("goodbye").add("hello")
+s.size === 2
+s.has("hello") === true
+for (let key of s.values())
+    console.log(key)</code></pre><p></p>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>let m = new Map()
+let s = Symbol()
+m.set("hello", 42)
+m.set(s, 34)
+m.get(s) === 34
+m.size === 2
+for (let [ key, val ] of m.entries())
+    console.log(key + " = " + val)</code></pre>
+    <p class='fragment'><code>WeakSet</code> & <code>WeakMap</code></p>
+    <aside class='notes'>
+        WeakMap: obiekty jako klucze, znikają, jak tylko znikną do nich wszystkie referencje
+    </aside>
+</section>
+
+<section class='side-by-side'>
+    <h5>wbudowane metody</h5>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// Object.assign:
+
+var dest = { quux: 0 }
+var src1 = { foo: 1, bar: 2 }
+var src2 = { foo: 3, baz: 4 }
+Object.assign(dest, src1, src2)
+
+// String:
+
+"foo-".repeat(3)               // foo-foo-foo-
+"hello".startsWith("ello", 1) // true
+
+"hello".endsWith("hell", 4)   // true
+
+"hello".includes("ell")       // true
+"hello".includes("ell", 1)    // true
+"hello".includes("ell", 2)    // false</code></pre>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>// Array:
+
+[ 1, 3, 4, 2 ].find(x => x > 3) // 4
+[ 1, 3, 4, 2 ].findIndex(x => x > 3) // 2
+
+// Number:
+
+Number.isNaN(42)                       // false
+Number.isNaN(NaN)                      // true
+
+Number.isFinite(Infinity)              // false
+Number.isFinite(-Infinity)             // false
+Number.isFinite(NaN)                   // false
+Number.isFinite(123)                   // true
+Number.isSafeInteger(42)               // true
+Number.isSafeInteger(9007199254740992) // false
+
+Math.trunc(42.7)                       // 42
+Math.trunc( 0.1)                       // 0
+Math.trunc(-0.1)                       // -0
+
+Math.sign(7)                           // 1
+Math.sign(0)                           // 0
+Math.sign(-0)                          // -0
+Math.sign(-7)                          // -1
+Math.sign(NaN)                         // NaN</code></pre>
+
+</section>
+
+<section>
+    <h4>Promisy</h4>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>const msgAfterTimeout = (msg, who, timeout) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => resolve(\`${msg} Hello ${who}!\`), timeout)
+    })
+}
+
+msgAfterTimeout("", "Foo", 100).then((msg) =>
+    msgAfterTimeout(msg, "Bar", 200)
+).then((msg) => {
+    console.log(\`done after 300ms:${msg}\`)
+})</code></pre>
+    <pre class='fragment'><code class='lang-javascript' data-noescape>Promise.all([
+    fetchPromised("http://backend/foo.txt"),
+    fetchPromised("http://backend/bar.txt"),
+    fetchPromised("http://backend/baz.txt"),
+]).then(([ foo, bar, baz ]) => {
+    console.log(\`success: foo=${foo} bar=${bar} baz=${baz}\`)
+}, (err) => {
+    console.log(\`fetch error: ${err}\`)
+})</code></pre>
+
+</section>

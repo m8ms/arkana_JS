@@ -1,0 +1,113 @@
+<section>
+    <h3>Podstawy</h3>
+
+    <aside class='notes' data-markdown>
+        * obiekty
+          - prototyp
+          - rozszerzanie
+    </aside>
+</section>
+<section>
+    <h4>Obiekty & konstruktory</h4>
+
+    <p class='fragment'><small>Obiekt:</small></p>
+    <pre class='fragment'><code class='lang-javascript'>var obiekt = {
+    klucz: 'wartość',
+    przefunkcja: function (a, b) {
+        return a * b - 47;
+    }
+}</code></pre>
+    <p class='fragment'><small>Konstruktor:</small></p>
+    <pre class='fragment'><code class='lang-javascript'>function Animal() {
+    this.sound = 'trolololo'
+}</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>var stephen = new Animal() // stephen: Object Animal {sound: "trolololo"}</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>var jason = Animal() // jason: undefined</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>window.sound // "trolololo"</code></pre>
+    <aside class='notes'>
+        co się statnie jak wywołamy bez then
+    </aside>
+</section>
+
+<section>
+    <h4>Rozszerzanie obiektów</h4>
+    <pre><code class='lang-javascript'>var stephen = new Animal() // stephen: Object Animal {sound: "trolololo"}</code></pre>
+    <pre><code class='lang-javascript'>stephen.likes = 'eating' // stephen: Object Animal {sound: "trolololo", likes: "eating"}</code></pre>
+</section>
+
+<section>
+    <h4>Prototyp & dziedziczenie</h4>
+    <pre><code class='lang-javascript'>function Elephant() {
+    this.trunk = 'yes'
+    this.legs = 4
+}</code></pre>
+
+    <pre class='fragment'><code class='lang-javascript'>var maggie = new Elephant() // maggie: Object Elephant {trunk: "yes", legs: 4}</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>Elephant.prototype = new Animal()
+var jason = new Elephant() // jason: Object Elephant {sound: "trolololo", trunk: "yes", legs: 4}</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>Object.getPrototypeOf(jason) // Object Animal { ... }
+jason.\__proto__ // Object Animal { ... } (deprecated)</code></pre>
+    <div class='fragment'><p><small>Ale...</small></p>
+        <pre><code class='lang-javascript'>Animal.isPrototypeOf(jason) // false (prototypem jest instancja "new Animal()")
+Medusa.prototype = Animal // prototypem będzie "function"
+</code></pre>
+        <p></p>
+</div>
+    <pre class='fragment'><code class='lang-javascript'>var ronaldTheSquid = Object.create(new Animal, { tentacles: 'indeed' })</code></pre>
+</code></pre>
+
+<aside class='notes'>
+    częsta konfuzja: konstruktor sam w sobie nie ma prototypu a tylko pole .prototype, swtorzony obiekt ma
+    Object.create() - preferowany zamiast new i konstruktorów
+</aside>
+</section>
+
+<section class='side-by-side'>
+    <h4>Klasy (ES6) vs. Prototypowanie</h4>
+    <pre class='fragment'><code class='lang-javascript'>class Elephant extends Animal {
+    static soundMade = 'trolololo'
+
+    constructor() {
+        super()
+        this.trunk = 'yes'
+        this.legs = 4
+    }
+
+    //metody klasy:
+    eat(fruit) {
+        if (this.trunk === 'yes') {
+            this.grab(fruit)
+        }
+    }
+}</code></pre>
+    <pre class='fragment'><code class='lang-javascript'>'strict mode'
+
+function Elephant() {
+    this.trunk = 'yes'
+    this.legs = 4
+}
+
+Elephant.soundMade = 'trolololo' // static
+Elephant.prototype.constructor = Animal // extends
+Elephant.prototype.eat = function (fruit) { }
+    </code></pre>
+
+</section>
+
+<section>
+    <h4>Delegacja</h4>
+    <pre class='fragment'><code class='lang-javascript'>let obj = {things: 3}
+let addThings = function(a, b, c){
+ return this.things + a + b + c
+}</code></pre>
+    <div class='fragment'>
+        <p><small>call & apply</small></p>
+        <pre><code class='lang-javascript'>x = addThings.call(obj, 1,4,6) // x: 14
+y = addThings.apply(obj, [1,4,6]) // y: 14</code></pre>
+    </div>
+    <div class='fragment'>
+        <p><small>bind</small></p>
+        <pre><code class='lang-javascript'>z = addThings.bind(obj, 1,4,6) // z: function ()
+let val = z() // val: 14</code></pre>
+    </div>
+</section>

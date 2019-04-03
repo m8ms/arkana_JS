@@ -1,0 +1,35 @@
+<section>
+    <h3>Strict Mode</h3>
+</section>
+<section>
+<pre><code class='lang-javascript'>'use strict'
+
+// Assignment to a non-writable global
+var undefined = 5 // TypeError
+var Infinity = 5 // TypeError
+
+// Assignment to a non-writable property
+var obj1 = {}
+Object.defineProperty(obj1, 'x', { value: 42, writable: false })
+obj1.x = 9 // TypeError
+
+// Assignment to a getter-only property
+var obj2 = { get x() { return 17 } }
+obj2.x = 5 // TypeError
+
+// Assignment to a new property on a non-extensible object
+var fixed = {}
+Object.preventExtensions(fixed)
+fixed.newProp = 'ohai' // TypeError
+
+delete Object.prototype // TypeError
+
+var o = { p: 1, p: 2 } // syntax error
+
+function sum(a, a, c) { // syntax error
+}
+
+eval('var x = 123')
+console.log(x) // undefined
+</code></pre>
+</section>
