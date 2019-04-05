@@ -13,14 +13,14 @@
             <code>
             String.prototype.strPad
             </code>
-            <pre><code class='lang-javascript'>'John'.strPad(7, '*') // "****John"</code></pre>
+            <pre><code class='lang-javascript'>'John'.strPad(7, '0') // "0000John"</code></pre>
         </li>
     </ul>
 </section>
 
 <section>
     <h4>async/await</h4>
-    async function fetchContent() {
+    <pre><code class='lang-javascript'>async function fetchContent() {
 
     let content = await fetch('/api/content') // poczeka na content
     let text = await content.text() // poczeka na text
